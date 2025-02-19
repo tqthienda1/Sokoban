@@ -1,19 +1,43 @@
+import timeit
+import psutil
+import os
+
 from BFS import *
+from gbfs import *
 from map_processor import *
 
-file_name = "./data/input-02.txt"
-grid, costs = GetMapFromFile(file_name)
-print(grid)
-print(costs)
-ares_pos, stones = find_pos(grid)
-print(stones)
+def main():
+    file_name = "./Inputs/input-03.txt"
+    grid, costs = GetMapFromFile(file_name)
+    print(grid)
+    print(costs)
+    ares_pos, stones, switches = find_pos(grid)
+    print(stones)
 
-if ares_pos and stones:
-    path, totalCost = order_bfs(grid, ares_pos, stones, costs)
-    if path:
-        print("Path found:", ''.join(path))
-        print("Total cost: ", totalCost)
+    if ares_pos and stones:
+        print("1. Breadth First Search")
+        print("2. Greedy Best First Search")
+        choice = int(input("Choose algorithm you want to use: "))
+        
+        path, totalCost = None, None
+        
+        if choice == 1:
+            path, totalCost = order_bfs(grid, ares_pos, stones, costs)
+        elif choice == 2:
+            path, totalCost = launch(file_name)
+            
+            
+        if path:
+            print("\nPath found:", ''.join(path))
+            print("Total cost: ", totalCost)
+        else:
+            print("\nNo valid path found.")
     else:
-        print("No valid path found.")
-else:
-    print("Invalid map: Missing Ares or stones.")
+        print("\nInvalid map: Missing Ares or stones.")
+
+elapsed_time = timeit.timeit(main, number=1)
+process = psutil.Process(os.getpid())  
+memory_used = process.memory_info().rss / 1024**2 
+
+print(f"Time exceeded: {round(elapsed_time, 3)}")
+print(f"Memory: {memory_used:.2f} MB")

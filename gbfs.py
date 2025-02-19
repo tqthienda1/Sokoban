@@ -1,4 +1,4 @@
-
+from collections import deque
 
 def loadMap(file_name):
     map_data = []
@@ -43,14 +43,14 @@ def goal(map_data, stone_cur_pos):
 def solve(map_data, stone_costs):
     directions = [[-1, 0, 'U', 'u', 0], [1, 0, 'D', 'd', 0], [0, -1, 'L', 'l', 0], [0, 1, 'R', 'r', 0]]
     ares_first_pos, stones_first_pos, switches_pos = findPos(map_data)
-    frontier = [(ares_first_pos, stones_first_pos, [], 0)]
+    frontier = deque([(ares_first_pos, stones_first_pos, [], 0)])
     explored = set()
     
     while(True):
         if frontier == []:
             return "No solution"
         
-        ares_cur_pos, stones_cur_pos, path, cost = frontier.pop(0)
+        ares_cur_pos, stones_cur_pos, path, cost = frontier.popleft()
         ares_cur_pos_y, ares_cur_pos_x = ares_cur_pos
         
         if (ares_cur_pos, tuple(stones_cur_pos)) in explored:
@@ -101,20 +101,14 @@ def solve(map_data, stone_costs):
             
             
         
-        
-
-def main():
+def launch(file_name):
     map_data = []
     stone_costs = []
-    file_name = "./Inputs/input-02.txt"
     
     map_data, stone_costs = loadMap(file_name)
     
-    print(map_data, stone_costs)
     
     solution, total_cost = solve(map_data, stone_costs)
     
-    print(solution, total_cost)
     
-if __name__ == "__main__":
-    main()
+    return solution, total_cost
