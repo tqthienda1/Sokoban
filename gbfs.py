@@ -1,4 +1,5 @@
 from collections import deque
+from helper import *
 
 def loadMap(file_name):
     map_data = []
@@ -10,12 +11,6 @@ def loadMap(file_name):
         map_data = [line.rstrip() for line in file.readlines()]
     
     return map_data, stone_costs
-
-def heuristicCalc(start, end):
-    start_y, start_x = start
-    end_y, end_x = end
-    
-    return abs(end_y - start_y) + abs(end_x - start_x)
 
 def findPos(map_data):
     ares_pos = None

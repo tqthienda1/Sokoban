@@ -4,7 +4,7 @@ import os
 
 from BFS import *
 from gbfs import *
-from map_processor import *
+from helper import *
 
 def main():
     file_name = "./Inputs/input-03.txt"

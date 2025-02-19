@@ -1,5 +1,11 @@
 import numpy as np
 
+def heuristicCalc(start, end):
+    start_y, start_x = start
+    end_y, end_x = end
+    
+    return abs(end_y - start_y) + abs(end_x - start_x)
+
 def GetMapFromFile(file_name):  
     lines = []
     with open(file_name, "r") as f:
