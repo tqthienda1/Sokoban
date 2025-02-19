@@ -7,7 +7,7 @@ from collections import deque
 def heuristic(stones, switches):
     total = 0 
     for stone in stones:
-        min(abs(stone[0] - s[0]) + abs(stone[1] - s[1]) for s in switches)
+        total += min(abs(stone[0] - s[0]) + abs(stone[1] - s[1]) for s in switches)
     return total
 
 def order_A_star(grid, start_node, stones, costs, switches):
@@ -34,13 +34,14 @@ def order_A_star(grid, start_node, stones, costs, switches):
             if not is_valid(grid, new_r, new_c):
                 continue
 
-            cur_cost = totalCost
-            cur_cost += 1
+            cur_cost = totalCost + 1
             new_stones = list(stones_pos)
             isPush = False
 
             if(new_r, new_c) in stones_pos: 
-                stone_index = stones_pos.index((new_r, new_c))
+                for stone_index, (sr, sc) in enumerate(stones_pos):
+                    if (sr, sc) == (new_r, new_c):
+                        break
 
                 new_stone_r = new_r + dr
                 new_stone_c = new_c + dc

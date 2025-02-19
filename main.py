@@ -1,7 +1,8 @@
 from BFS import *
 from map_processor import *
 from A_star import *
-file_name = "./data/input-02.txt"
+
+file_name = "./data/input-03.txt"
 grid, costs = GetMapFromFile(file_name)
 print(grid)
 print(costs)
@@ -11,8 +12,8 @@ switches = find_switches(grid)
 print(switches)
 
 if ares_pos and stones:
-    # path, totalCost = order_bfs(grid, ares_pos, stones, costs)
-    path, totalCost = order_A_star(grid, ares_pos, stones, costs, switches)
+    path, totalCost = order_bfs(grid, ares_pos, stones, costs)
+    #path, totalCost = order_A_star(grid, ares_pos, stones, costs, switches)
     if path:
         print("Path found:", ''.join(path))
         print("Total cost: ", totalCost)
