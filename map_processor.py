@@ -32,5 +32,15 @@ def find_pos(grid):
 
     return ares_pos, stones
 
+def find_switches(grid):
+    switches = []
+    
+    for r in range(grid.shape[0]):
+        for c in range(grid.shape[1]):
+            if grid[r,c] == '.' or grid[r,c] == '*':
+                switches.append((r,c))
+
+    return switches
+
 def is_valid(grid, x, y):
     return 0 <= x < grid.shape[0] and 0 <= y < grid.shape[1] and grid[x,y] != '#' 
