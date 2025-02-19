@@ -21,6 +21,7 @@ def GetMapFromFile(file_name):
 def find_pos(grid): 
     ares_pos = None
     stones = []
+    switches = []
 
     for x in range(grid.shape[0]):
         for y in range(grid.shape[1]):
