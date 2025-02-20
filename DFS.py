@@ -19,10 +19,8 @@ def GetMapFromFile(file_name):
     costs = list(map(int, lines[0].split()))
     map_lines = lines[1:]
 
-    # Tìm độ dài lớn nhất
     max_len = max(len(line) for line in map_lines)
 
-    # Đệm khoảng trắng vào các dòng ngắn hơn
     map_lines = [list(line) + [' '] * (max_len - len(line)) for line in map_lines]
     
     map_array = np.array(map_lines)
@@ -51,35 +49,35 @@ def is_valid_move(game_map, pos):
     return 0 <= x < game_map.shape[0] and 0 <= y < game_map.shape[1] and game_map[x, y] != WALL
 
 def get_next_states(state, game_map, weights):
-    ares_pos, stones, switches = state  # Trạng thái bao gồm ares_pos, stones, và switches
+    ares_pos, stones, switches = state 
     next_states = []
     for dx, dy, move_char, push_char in directions:
         nx, ny = ares_pos[0] + dx, ares_pos[1] + dy
         if not is_valid_move(game_map, (nx, ny)):
             continue
-        if (nx, ny) in stones:  # Nếu Ares muốn di chuyển vào viên đá
+        if (nx, ny) in stones: 
             next_stone_pos = (nx + dx, ny + dy)
             if is_valid_move(game_map, next_stone_pos) and next_stone_pos not in stones:
-                stone_index = stones.index((nx, ny))  # Lấy index để tìm trọng lượng
-                cost = 1 + weights[stone_index]  # Đẩy viên đá
+                stone_index = stones.index((nx, ny))  
+                cost = 1 + weights[stone_index] 
                 new_stones = tuple(s for s in stones if s != (nx, ny)) + (next_stone_pos,)
                 next_states.append(((nx, ny), new_stones, switches, push_char, cost))
         else:
-            next_states.append(((nx, ny), stones, switches, move_char, 1))  # Di chuyển bình thường
+            next_states.append(((nx, ny), stones, switches, move_char, 1))  
     return next_states
 
 
 def sokoban_dfs(game_map, weights):
     node_counter = 0
     start_state = find_initial_state(game_map)
-    stack = [(start_state, "", 0)]  # Thêm cost ban đầu = 0
+    stack = [(start_state, "", 0)]  
     visited = set()
 
     while stack:
         state, path, cost = stack.pop()
         ares_pos, stones, switches = state
         
-        if is_goal_state(stones, switches):  # Kiểm tra điều kiện thắng
+        if is_goal_state(stones, switches):  
             return path, cost, node_counter
 
         if state in visited:
