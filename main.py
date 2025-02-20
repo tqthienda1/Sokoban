@@ -1,5 +1,5 @@
 import time
-import psutil
+import tracemalloc
 import os
 import textwrap
 
@@ -12,7 +12,7 @@ from A_star import *
 
 
 def main():
-    file_name = "./Inputs/input-03.txt"
+    file_name = "./Inputs/input-02.txt"
     grid, costs = GetMapFromFile(file_name)
     print(grid)
     print(costs)
@@ -24,15 +24,11 @@ def main():
         
         path, totalCost, algorithm, node_counter = None, None, None, None
         
-
-        
-        process = psutil.Process(os.getpid())  
-        memory_used = process.memory_info().rss / 1024**2 
-        
         file_output = "./Outputs/" + file_name.split('/')[2].replace("in", "out")
         with open(file_output, 'w') as file:
             file.write("Map: " + file_name.split('/')[2] + "\n\n")
             for choice in range(1, 6):
+                tracemalloc.start()
                 start_time = time.time()
     
                 if choice == 1:
@@ -57,6 +53,10 @@ def main():
                     path, totalCost, node_counter = order_A_star(grid, ares_pos, stones, costs, switches)
                     
                 elapsed_time = time.time() - start_time
+                current, peak = tracemalloc.get_traced_memory()
+                tracemalloc.stop()
+                
+                memory_used = peak / 1024**2
                 
                 if path:
                     file.write(algorithm + '\n')
