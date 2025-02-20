@@ -11,7 +11,7 @@ from A_star import *
 
 
 def main():
-    file_name = "./Inputs/input-01.txt"
+    file_name = "./Inputs/input-03.txt"
     grid, costs = GetMapFromFile(file_name)
     print(grid)
     print(costs)
@@ -59,7 +59,8 @@ def main():
                 
                 if path:
                     file.write(algorithm + '\n')
-                    file.write(f"Steps: {len(path)}, Weight: {totalCost}, Node: {node_counter}, Time(ms): {round(elapsed_time * 1000, 3)}, Memory(MB) {memory_used:.2f}\n\n")
+                    file.write(f"Steps: {len(path)}, Weight: {totalCost}, Node: {node_counter}, Time(ms): {round(elapsed_time * 1000, 3)}, Memory(MB) {memory_used:.2f}\n")
+                    file.write(path + "\n\n")
                 else:
                     file.write("No solution")
                     break
