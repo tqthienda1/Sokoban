@@ -1,10 +1,10 @@
 import numpy as np
 
-def heuristicCalc(start, end):
-    start_y, start_x = start
-    end_y, end_x = end
-    
-    return abs(end_y - start_y) + abs(end_x - start_x)
+def heuristic(stones, switches):
+    total = 0 
+    for index, stone in enumerate(stones):
+        total += min(abs(stone[0] - s[0]) + abs(stone[1] - s[1]) for s in switches)
+    return total
 
 def GetMapFromFile(file_name):  
     lines = []

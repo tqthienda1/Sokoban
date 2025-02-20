@@ -1,4 +1,5 @@
 from collections import deque
+from queue import PriorityQueue
 from helper import *
 
 def loadMap(file_name):
@@ -38,14 +39,13 @@ def goal(map_data, stone_cur_pos):
 def solve(map_data, stone_costs):
     directions = [[-1, 0, 'U', 'u', 0], [1, 0, 'D', 'd', 0], [0, -1, 'L', 'l', 0], [0, 1, 'R', 'r', 0]]
     ares_first_pos, stones_first_pos, switches_pos = findPos(map_data)
-    frontier = deque([(ares_first_pos, stones_first_pos, [], 0)])
+    frontier = PriorityQueue()
+    frontier.put((heuristic(stones_first_pos, switches_pos) , ares_first_pos, stones_first_pos, [], 0))
     explored = set()
     
-    while(True):
-        if frontier == []:
-            return "No solution"
+    while(not frontier.empty()):
         
-        ares_cur_pos, stones_cur_pos, path, cost = frontier.popleft()
+        heuristic_value, ares_cur_pos, stones_cur_pos, path, cost = frontier.get()
         ares_cur_pos_y, ares_cur_pos_x = ares_cur_pos
         
         if (ares_cur_pos, tuple(stones_cur_pos)) in explored:
@@ -55,17 +55,7 @@ def solve(map_data, stone_costs):
         if goal(map_data, stones_cur_pos):
             return path, cost
         
-        for index, (dy, dx, push, move, _) in enumerate(directions):
-            next_pos_y, next_pos_x = dy + ares_cur_pos_y, dx + ares_cur_pos_x
-            
-            if (next_pos_y, next_pos_x) not in stones_cur_pos:
-                for each_stone in stones_cur_pos:
-                    directions[index][4] = heuristicCalc((next_pos_y, next_pos_x), each_stone)
-            else:
-                for each_switch in switches_pos:
-                    directions[index][4] = heuristicCalc((next_pos_y, next_pos_x), each_switch)
-        
-        directions.sort(key=lambda x: x[-1])
+
         
         
         for dy, dx, push, move, _ in directions:
@@ -85,14 +75,17 @@ def solve(map_data, stone_costs):
                 new_stone_pos_y, new_stone_pos_x = stones_cur_pos_y + dy, stones_cur_pos_x + dx
                 if map_data[new_stone_pos_y][new_stone_pos_x] == '#' or (new_stone_pos_y, new_stone_pos_x) in stones_cur_pos:
                     continue
+                
                 tmp_stones_cur_pos[num_stone_explored] = (new_stone_pos_y, new_stone_pos_x)
                 is_pushed = True
                 
 
             if is_pushed:
-                frontier.append(((next_pos_y, next_pos_x), tmp_stones_cur_pos, path + [push], cost + 1 + stone_costs[num_stone_explored]))
+                frontier.put((heuristic(stones_cur_pos, switches_pos), (next_pos_y, next_pos_x), tmp_stones_cur_pos, path + [push], cost + 1 + stone_costs[num_stone_explored]))
             else:
-                frontier.append(((next_pos_y, next_pos_x), tmp_stones_cur_pos, path + [move], cost + 1))
+                frontier.put((heuristic(stones_cur_pos, switches_pos), (next_pos_y, next_pos_x), tmp_stones_cur_pos, path + [move], cost + 1))
+            
+            
             
             
         

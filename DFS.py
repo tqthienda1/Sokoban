@@ -78,8 +78,6 @@ def sokoban_dfs(game_map, weights):
         ares_pos, stones, switches = state
         
         if is_goal_state(stones, switches):  # Kiểm tra điều kiện thắng
-            print("Solution path:", path)
-            print("Total cost:", cost)
             return path, cost
 
         if state in visited:
@@ -93,8 +91,6 @@ def sokoban_dfs(game_map, weights):
     print("No solution found")
     return None, None
 
-
-if __name__ == "__main__":
-    file_path = 'input.txt'  # Đổi đường dẫn nếu cần
-    game_map, weights = GetMapFromFile(file_path)
-    sokoban_dfs(game_map, weights)
+def launchDFS(file_name):
+    game_map, weights = GetMapFromFile(file_name)
+    return sokoban_dfs(game_map, weights)

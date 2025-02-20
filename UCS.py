@@ -73,8 +73,6 @@ def sokoban_ucs(game_map, weights):
         ares_pos, stones, switches = state
         
         if is_goal_state(stones, switches):  # Kiểm tra điều kiện thắng
-            print("Solution path:", path)
-            print("Total cost:", cost)
             return path, cost
 
         if state in visited and visited[state] <= cost:
@@ -89,7 +87,6 @@ def sokoban_ucs(game_map, weights):
     return None, None
 
 
-if __name__ == "__main__":
-    file_path = 'input.txt'  # Đổi đường dẫn nếu cần
-    game_map, weights = GetMapFromFile(file_path)
-    sokoban_ucs(game_map, weights)
+def launchUCS(file_name):
+    game_map, weights = GetMapFromFile(file_name)
+    return sokoban_ucs(game_map, weights)
