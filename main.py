@@ -1,6 +1,7 @@
 import time
 import psutil
 import os
+import textwrap
 
 from BFS import *
 from gbfs import *
@@ -60,7 +61,7 @@ def main():
                 if path:
                     file.write(algorithm + '\n')
                     file.write(f"Steps: {len(path)}, Weight: {totalCost}, Node: {node_counter}, Time(ms): {round(elapsed_time * 1000, 3)}, Memory(MB) {memory_used:.2f}\n")
-                    file.write(path + "\n\n")
+                    file.write(textwrap.fill("".join(path), width=100) + "\n\n")
                 else:
                     file.write("No solution")
                     break
