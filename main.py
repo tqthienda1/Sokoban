@@ -8,7 +8,7 @@ from helper import *
 from A_star import *
 
 def main():
-    file_name = "./Inputs/input-01.txt"
+    file_name = "./Inputs/myfile.txt"
     grid, costs = GetMapFromFile(file_name)
     print(grid)
     print(costs)
