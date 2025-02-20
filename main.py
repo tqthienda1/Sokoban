@@ -1,4 +1,4 @@
-import timeit
+import time
 import psutil
 import os
 
@@ -24,26 +24,35 @@ def main():
         
         path, totalCost = None, None
         
+        start_time = time.time()
+        
         if choice == 1:
             path, totalCost = order_bfs(grid, ares_pos, stones, costs)
+            
         elif choice == 2:
             path, totalCost = launch(file_name)
         elif choice == 3:
             path, totalCost = order_A_star(grid, ares_pos, stones, costs, switches)
             
-            
+        elapsed_time = time.time() - start_time
+        
         if path:
             print("\nPath found:", ''.join(path))
             print("Total cost: ", totalCost)
         else:
             print("\nNo valid path found.")
+            
+        process = psutil.Process(os.getpid())  
+        memory_used = process.memory_info().rss / 1024**2 
+
+        print(f"Time exceeded: {round(elapsed_time, 3)}")
+        print(f"Memory: {memory_used:.2f} MB")
+            
+
     else:
         print("\nInvalid map: Missing Ares or stones.")
+        
 
-elapsed_time = timeit.timeit(main, number=1)
-process = psutil.Process(os.getpid())  
-memory_used = process.memory_info().rss / 1024**2 
 
-print(f"Time exceeded: {round(elapsed_time, 3)}")
-print(f"Memory: {memory_used:.2f} MB")
-
+if __name__ == "__main__":
+    main()
