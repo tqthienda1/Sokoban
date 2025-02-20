@@ -11,7 +11,7 @@ from A_star import *
 
 
 def main():
-    file_name = "./Inputs/input-04.txt"
+    file_name = "./Inputs/input-01.txt"
     grid, costs = GetMapFromFile(file_name)
     print(grid)
     print(costs)
@@ -20,12 +20,6 @@ def main():
     print(switches)
 
     if ares_pos and stones:
-        # print("1. Breadth First Search")
-        # print("2. Greedy Best First Search")
-        # print("3. Uniform Cost Search")
-        # print("4. Depth First Search")
-        # print("5. A Star")
-        # choice = int(input("Choose algorithm you want to use: "))
         
         path, totalCost, algorithm, node_counter = None, None, None, None
         
