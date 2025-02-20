@@ -59,8 +59,6 @@ def solve(map_data, stone_costs):
             return path, cost, node_counter
         
 
-        
-        
         for dy, dx, push, move, _ in directions:
             next_pos_y, next_pos_x =  dy + ares_cur_pos[0], dx + ares_cur_pos[1]
             

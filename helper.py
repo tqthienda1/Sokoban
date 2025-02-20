@@ -15,10 +15,8 @@ def GetMapFromFile(file_name):
     costs = list(map(int, lines[0].split()))
     map_lines = lines[1:]
 
-    # Tìm độ dài lớn nhất
     max_len = max(len(line) for line in map_lines)
 
-    # Đệm khoảng trắng vào các dòng ngắn hơn
     map_lines = [list(line) + [' '] * (max_len - len(line)) for line in map_lines]
     
     map_array = np.array(map_lines)
