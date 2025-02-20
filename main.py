@@ -5,10 +5,12 @@ import os
 from BFS import *
 from gbfs import *
 from helper import *
+from UCS import *
+from DFS import *
 
 
 def main():
-    file_name = "./Inputs/input-02.txt"
+    file_name = "./Inputs/input-03.txt"
     grid, costs = GetMapFromFile(file_name)
     print(grid)
     print(costs)
@@ -18,6 +20,8 @@ def main():
     if ares_pos and stones:
         print("1. Breadth First Search")
         print("2. Greedy Best First Search")
+        print("3. Uniform Cost Search")
+        print("4. Depth First Search")
         choice = int(input("Choose algorithm you want to use: "))
         
         path, totalCost = None, None
@@ -29,7 +33,10 @@ def main():
             
         elif choice == 2:
             path, totalCost = launch(file_name)
-            
+        elif choice == 3:
+            path, totalCost = launchUCS(file_name)
+        elif choice == 4:
+            path, totalCost = launchDFS(file_name)
         elapsed_time = time.time() - start_time
         
         if path:
