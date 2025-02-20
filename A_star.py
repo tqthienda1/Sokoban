@@ -53,13 +53,13 @@ def order_A_star(grid, start_node, stones, costs, switches):
                 isPush = True
             
             new_g = g + 1
-            new_f = new_g + heuristic(new_stones, switches, costs)
-            
             if isPush:
                 new_g += costs[stone_index]
                 new_path = path + [push]
             else:
                 new_path = path + [move]
+            
+            new_f = new_g + heuristic(new_stones, switches, costs)
             
             heapq.heappush(open_list, (new_f, new_g, (new_r, new_c), tuple(new_stones), new_path, cur_cost))
 

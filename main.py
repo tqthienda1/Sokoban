@@ -6,6 +6,7 @@ from BFS import *
 from gbfs import *
 from helper import *
 from A_star import *
+from UCS import *
 
 def main():
     file_name = "./Inputs/myfile.txt"
@@ -20,6 +21,7 @@ def main():
         print("1. Breadth First Search")
         print("2. Greedy Best First Search")
         print("3. A*")
+        print("4. UCS")
         choice = int(input("Choose algorithm you want to use: "))
         
         path, totalCost = None, None
@@ -28,12 +30,12 @@ def main():
         
         if choice == 1:
             path, totalCost = order_bfs(grid, ares_pos, stones, costs)
-            
         elif choice == 2:
             path, totalCost = launch(file_name)
         elif choice == 3:
             path, totalCost = order_A_star(grid, ares_pos, stones, costs, switches)
-            
+        elif choice == 4:
+            path, totalCost = sokoban_ucs(grid, costs)
         elapsed_time = time.time() - start_time
         
         if path:
