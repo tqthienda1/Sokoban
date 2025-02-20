@@ -8,10 +8,12 @@ from collections import Counter
 def heuristic(stones, switches, costs):
     total = 0 
     for index, stone in enumerate(stones):
-        total += min(abs(stone[0] - s[0]) + abs(stone[1] - s[1]) for s in switches)
+        min_distance = min(abs(stone[0] - s[0]) + abs(stone[1] - s[1]) for s in switches)
+        total += min_distance * costs[index]
     return total
 
 def order_A_star(grid, start_node, stones, costs, switches):
+    node_counter = 0
     totalCost = 0
     open_list = []
     heapq.heappush(open_list, (0 + heuristic(stones, switches, costs), 0, start_node, tuple(stones), [], totalCost ))
@@ -27,7 +29,7 @@ def order_A_star(grid, start_node, stones, costs, switches):
         closed_list.add(((ares_r,ares_c), stones_pos))
 
         if all((r,c) in switches for r,c in stones_pos):
-            return path, totalCost
+            return path, totalCost, node_counter
         
         for dr, dc, push, move in directions:
             new_r, new_c = ares_r + dr, ares_c + dc
@@ -62,6 +64,7 @@ def order_A_star(grid, start_node, stones, costs, switches):
             new_f = new_g + heuristic(new_stones, switches, costs)
             
             heapq.heappush(open_list, (new_f, new_g, (new_r, new_c), tuple(new_stones), new_path, cur_cost))
+            node_counter += 1
 
     return None
 

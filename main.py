@@ -5,11 +5,13 @@ import os
 from BFS import *
 from gbfs import *
 from helper import *
-from A_star import *
 from UCS import *
+from DFS import *
+from A_star import *
+
 
 def main():
-    file_name = "./Inputs/myfile.txt"
+    file_name = "./Inputs/input-03.txt"
     grid, costs = GetMapFromFile(file_name)
     print(grid)
     print(costs)
@@ -18,37 +20,56 @@ def main():
     print(switches)
 
     if ares_pos and stones:
-        print("1. Breadth First Search")
-        print("2. Greedy Best First Search")
-        print("3. A*")
-        print("4. UCS")
-        choice = int(input("Choose algorithm you want to use: "))
         
-        path, totalCost = None, None
+        path, totalCost, algorithm, node_counter = None, None, None, None
         
-        start_time = time.time()
+
         
-        if choice == 1:
-            path, totalCost = order_bfs(grid, ares_pos, stones, costs)
-        elif choice == 2:
-            path, totalCost = launch(file_name)
-        elif choice == 3:
-            path, totalCost = order_A_star(grid, ares_pos, stones, costs, switches)
-        elif choice == 4:
-            path, totalCost = sokoban_ucs(grid, costs)
-        elapsed_time = time.time() - start_time
-        
-        if path:
-            print("\nPath found:", ''.join(path))
-            print("Total cost: ", totalCost)
-        else:
-            print("\nNo valid path found.")
-            
         process = psutil.Process(os.getpid())  
         memory_used = process.memory_info().rss / 1024**2 
+        
+        file_output = "./Outputs/" + file_name.split('/')[2].replace("in", "out")
+        with open(file_output, 'w') as file:
+            file.write("Map: " + file_name.split('/')[2] + "\n\n")
+            for choice in range(1, 6):
+                start_time = time.time()
+    
+                if choice == 1:
+                    algorithm = "BFS"
+                    
+                    path, totalCost, node_counter = order_bfs(grid, ares_pos, stones, costs)
+                elif choice == 2:
+                    algorithm = "GBFS"
+                    
+                    path, totalCost, node_counter = launch(file_name)
+                elif choice == 3:
+                    algorithm = "UCS"
+                    
+                    path, totalCost, node_counter = launchUCS(file_name)
+                elif choice == 4:
+                    algorithm = "DFS"
+                    
+                    path, totalCost, node_counter = launchDFS(file_name)
+                elif choice == 5:
+                    algorithm = "A*"
+                    
+                    path, totalCost, node_counter = order_A_star(grid, ares_pos, stones, costs, switches)
+                    
+                elapsed_time = time.time() - start_time
+                
+                if path:
+                    file.write(algorithm + '\n')
+                    file.write(f"Steps: {len(path)}, Weight: {totalCost}, Node: {node_counter}, Time(ms): {round(elapsed_time * 1000, 3)}, Memory(MB) {memory_used:.2f}\n")
+                    file.write(path + "\n\n")
+                else:
+                    file.write("No solution")
+                    break
+                
+                
+                
+            
 
-        print(f"Time exceeded: {round(elapsed_time, 3)}")
-        print(f"Memory: {memory_used:.2f} MB")
+
             
 
     else:
