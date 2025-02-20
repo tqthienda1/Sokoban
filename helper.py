@@ -22,6 +22,8 @@ def GetMapFromFile(file_name):
     map_lines = [list(line) + [' '] * (max_len - len(line)) for line in map_lines]
     
     map_array = np.array(map_lines)
+    
+    f.close()
     return map_array, costs
 
 def find_pos(grid): 

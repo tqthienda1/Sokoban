@@ -11,6 +11,8 @@ def loadMap(file_name):
         
         map_data = [line.rstrip() for line in file.readlines()]
     
+    file.close()
+    
     return map_data, stone_costs
 
 def findPos(map_data):
@@ -37,6 +39,7 @@ def goal(map_data, stone_cur_pos):
     return True
  
 def solve(map_data, stone_costs):
+    node_counter = 0
     directions = [[-1, 0, 'U', 'u', 0], [1, 0, 'D', 'd', 0], [0, -1, 'L', 'l', 0], [0, 1, 'R', 'r', 0]]
     ares_first_pos, stones_first_pos, switches_pos = findPos(map_data)
     frontier = PriorityQueue()
@@ -53,7 +56,7 @@ def solve(map_data, stone_costs):
         explored.add((ares_cur_pos, tuple(stones_cur_pos)))
         
         if goal(map_data, stones_cur_pos):
-            return path, cost
+            return path, cost, node_counter
         
 
         
@@ -84,6 +87,7 @@ def solve(map_data, stone_costs):
                 frontier.put((heuristic(stones_cur_pos, switches_pos), (next_pos_y, next_pos_x), tmp_stones_cur_pos, path + [push], cost + 1 + stone_costs[num_stone_explored]))
             else:
                 frontier.put((heuristic(stones_cur_pos, switches_pos), (next_pos_y, next_pos_x), tmp_stones_cur_pos, path + [move], cost + 1))
+            node_counter += 1
             
             
             
@@ -96,7 +100,7 @@ def launch(file_name):
     map_data, stone_costs = loadMap(file_name)
     
     
-    solution, total_cost = solve(map_data, stone_costs)
+    solution, total_cost, node_counter = solve(map_data, stone_costs)
     
     
-    return solution, total_cost
+    return solution, total_cost, node_counter

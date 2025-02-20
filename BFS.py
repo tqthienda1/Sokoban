@@ -1,7 +1,8 @@
 from collections import deque
 from helper import *
 
-def order_bfs(grid, start_node, stones, costs): 
+def order_bfs(grid, start_node, stones, costs):
+    node_counter = 0 
     totalCost = 0
     queue = deque([(start_node, tuple(stones), [], totalCost)]) # tạo hàng đợi chứa vị trí ares, vị trí đá và đường đi
     visited = set()
@@ -18,7 +19,7 @@ def order_bfs(grid, start_node, stones, costs):
         
         # kiểm tra nếu tất cả đá đã ở đúng vt switch, trả về path
         if all(grid[x,y] == '.' for x,y in stones_pos):
-            return path, totalCost
+            return path, totalCost, node_counter
         
 
         # di chuyển đi 4 hướng
@@ -57,6 +58,7 @@ def order_bfs(grid, start_node, stones, costs):
                 queue.append(((new_x, new_y), tuple(new_stones), path + [push], cur_cost))
             else:
                 queue.append(((new_x, new_y), tuple(new_stones), path + [move], cur_cost))
+            node_counter += 1
 
     return None
 

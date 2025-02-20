@@ -1,0 +1,17 @@
+Map: input-04.txt
+
+BFS
+Steps: 16, Weight: 711, Node: 40045, Time(ms): 110.665, Memory(MB) 26.25
+
+GBFS
+Steps: 18, Weight: 713, Node: 2002, Time(ms): 9.266, Memory(MB) 26.25
+
+UCS
+Steps: 61, Weight: 76, Node: 154798, Time(ms): 740.929, Memory(MB) 26.25
+
+DFS
+Steps: 633, Weight: 4122, Node: 4289, Time(ms): 12.918, Memory(MB) 26.25
+
+A*
+Steps: 24, Weight: 429, Node: 29488, Time(ms): 144.193, Memory(MB) 26.25
+

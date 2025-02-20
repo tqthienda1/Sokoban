@@ -20,6 +20,7 @@ def GetMapFromFile(file_name):
     max_len = max(len(line) for line in lines)
     lines = [line + [' '] * (max_len - len(line)) for line in lines]
     map_array = np.array(lines)
+    f.close()
     return map_array, weights
 
 
@@ -64,6 +65,7 @@ def get_next_states(state, game_map, weights):
 
 
 def sokoban_ucs(game_map, weights):
+    node_counter = 0
     start_state = find_initial_state(game_map)
     pq = [(0, start_state, "")]  # (cost, state, path)
     visited = {}
@@ -73,7 +75,7 @@ def sokoban_ucs(game_map, weights):
         ares_pos, stones, switches = state
         
         if is_goal_state(stones, switches):  # Kiểm tra điều kiện thắng
-            return path, cost
+            return path, cost, node_counter
 
         if state in visited and visited[state] <= cost:
             continue
@@ -82,6 +84,7 @@ def sokoban_ucs(game_map, weights):
         for next_state in get_next_states(state, game_map, weights):
             new_ares_pos, new_stones, new_switches, move, step_cost = next_state
             heapq.heappush(pq, (cost + step_cost, (new_ares_pos, new_stones, new_switches), path + move))
+            node_counter += 1
     
     print("No solution found")
     return None, None
