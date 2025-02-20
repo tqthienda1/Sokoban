@@ -1,24 +1,22 @@
 Map: input-01.txt
 
 BFS
-Steps: 19, Weight: 1741, Node: 35447, Time(ms): 105.275, Memory(MB) 26.46
+Steps: 19, Weight: 1741, Node: 35447, Time(ms): 1015.145, Memory(MB) 4.58
 drUUruLLDDulDuruulD
 
 GBFS
-Steps: 44, Weight: 2852, Node: 4071, Time(ms): 33.652, Memory(MB) 26.46
+Steps: 44, Weight: 2852, Node: 4071, Time(ms): 174.992, Memory(MB) 0.39
 dlUrUruLdddrUluurrdLulDDrdLulluRdrruululDrDD
 
 UCS
-Steps: 20, Weight: 1436, Node: 127591, Time(ms): 651.089, Memory(MB) 26.46
-drUUruLLDlDuruulDrdD
+Steps: 20, Weight: 1526, Node: 43538, Time(ms): 954.938, Memory(MB) 5.37
+drUlUlDuuurDDurrdLLD
 
 DFS
-Steps: 258, Weight: 13368, Node: 102392, Time(ms): 289.34, Memory(MB) 26.46
-drUldlUrrUruLLDrddlluRlluRRurrdLrullDlldrdrrULrdllUruurrdLrullDrddlluluRRlldrRllurruulDrrrdLrulllDRl
-ldRlurrurrdLrullldldrdrrULrUruLLDrddllUdrruurulldDrdLrullluRRlldrrrUluulDrdrruLrdlldlluRRlldrrrUlluu
-rDldldrrruruLrdlLrrulLrrdlldlluRRurrdLrullDrrullulDrrrdllD
+Steps: 86, Weight: 4796, Node: 39449, Time(ms): 716.18, Memory(MB) 2.82
+drUlUlldRRlluruurDDlurrrdLrullldldrdrrULrUruLLDlDRllurrrrullulDrrrdllddrUluurrdLrullDD
 
 A*
-Steps: 26, Weight: 1640, Node: 2524, Time(ms): 14.985, Memory(MB) 26.46
-UlDuuurDrdLddrUluurrdLulDD
+Steps: 20, Weight: 1526, Node: 4032, Time(ms): 188.535, Memory(MB) 0.34
+drUlUlDuuurDDurrdLLD
 

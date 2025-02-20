@@ -12,7 +12,7 @@ directions = [(-1, 0, 'u', 'U'), (1, 0, 'd', 'D'), (0, -1, 'l', 'L'), (0, 1, 'r'
 def GetMapFromFile(file_name):
     lines = []
     with open(file_name, "r") as f:
-        weights = list(map(int, f.readline().strip().split()))  # Đọc trọng lượng
+        weights = list(map(int, f.readline().strip().split()))  
         for line in f:
             lines.append(list(line.rstrip("\n")))
 
@@ -25,7 +25,7 @@ def GetMapFromFile(file_name):
 def find_initial_state(game_map, weights):
     ares_pos, stones, switches = None, [], []
     stone_weights = []
-    stone_idx = 0  # Dùng để ánh xạ trọng lượng
+    stone_idx = 0  
     
     for i in range(game_map.shape[0]):
         for j in range(game_map.shape[1]):
@@ -61,9 +61,9 @@ def get_next_states(state, game_map):
         if not is_valid_move(game_map, (nx, ny)):
             continue
         
-        if (nx, ny) in stones:  # Nếu Ares muốn di chuyển vào viên đá
+        if (nx, ny) in stones:  
             if (nx, ny) in switches:
-                continue  # Không thể đẩy viên đá đã nằm trên switch
+                continue 
             next_stone_pos = (nx + dx, ny + dy)
             if is_valid_move(game_map, next_stone_pos) and next_stone_pos not in stones:
                 cost = 1 + stone_weight_dict[(nx, ny)]
@@ -71,7 +71,7 @@ def get_next_states(state, game_map):
                 new_stone_weights = frozenset((s, w) if s != (nx, ny) else (next_stone_pos, w) for s, w in stone_weights)
                 next_states.append(((nx, ny), new_stones, switches, new_stone_weights, push_char, cost))
         else:
-            next_states.append(((nx, ny), stones, switches, stone_weights, move_char, 1))  # Di chuyển bình thường
+            next_states.append(((nx, ny), stones, switches, stone_weights, move_char, 1))  
     
     return next_states
 
@@ -87,9 +87,8 @@ def sokoban_dfs(game_map, weights):
         ares_pos, stones, switches, stone_weights = state
         
         if is_goal_state(stones, switches):
-            print("Solution path:", path)
-            print("Total cost:", cost)
-            return path, cost
+
+            return path, cost, node_counter
 
         if state in visited:
             continue
@@ -97,10 +96,9 @@ def sokoban_dfs(game_map, weights):
 
         for next_state in get_next_states(state, game_map):
             new_ares_pos, new_stones, new_switches, new_stone_weights, move, step_cost = next_state
-            if is_goal_state(new_stones, new_switches):  # Dừng ngay khi đạt trạng thái mục tiêu
-                print("Solution path:", path + move)
-                print("Total cost:", cost + step_cost)
-                return path + move, cost + step_cost
+            if is_goal_state(new_stones, new_switches):
+ 
+                return path + move, cost + step_cost, node_counter + 1
             stack.append(((new_ares_pos, new_stones, new_switches, new_stone_weights), path + move, cost + step_cost))
             node_counter += 1
     
@@ -108,6 +106,6 @@ def sokoban_dfs(game_map, weights):
 def launchDFS(file_name):
     node_counter = 0
     game_map, weights = GetMapFromFile(file_name)
-    solution, total_cost, node_counter = sokoban_dfs(game_map, weights, node_counter)
+    solution, total_cost, node_counter = sokoban_dfs(game_map, weights)
 
     return solution, total_cost, node_counter
