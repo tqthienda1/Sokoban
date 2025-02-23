@@ -37,6 +37,23 @@ def goal(map_data, stone_cur_pos):
             return False
             
     return True
+
+def isDeadlock(new_stone_pos_x, new_stone_pos_y, map_data, stones_cur_pos):
+    if map_data[new_stone_pos_y][new_stone_pos_x] == '.':
+        return False
+    
+    if ((new_stone_pos_y, new_stone_pos_x + 1) in stones_cur_pos and map_data[new_stone_pos_y + 1][new_stone_pos_x] == '#' and map_data[new_stone_pos_y + 1][new_stone_pos_x + 1] == '#') or ((new_stone_pos_y, new_stone_pos_x - 1) in stones_cur_pos and map_data[new_stone_pos_y + 1][new_stone_pos_x] == '#' and map_data[new_stone_pos_y + 1][new_stone_pos_x - 1] == '#'):
+        return True
+       
+    if ((new_stone_pos_y + 1, new_stone_pos_x) in stones_cur_pos and map_data[new_stone_pos_y][new_stone_pos_x + 1] == '#' and map_data[new_stone_pos_y + 1][new_stone_pos_x + 1] == '#') or ((new_stone_pos_y - 1, new_stone_pos_x) in stones_cur_pos and map_data[new_stone_pos_y][new_stone_pos_x - 1] == '#' and map_data[new_stone_pos_y + 1][new_stone_pos_x - 1] == '#'):
+        return True
+    
+    return  (map_data[new_stone_pos_y - 1][new_stone_pos_x] == '#' and map_data[new_stone_pos_y][new_stone_pos_x - 1] == '#') or \
+            (map_data[new_stone_pos_y - 1][new_stone_pos_x] == '#' and map_data[new_stone_pos_y][new_stone_pos_x + 1] == '#') or \
+            (map_data[new_stone_pos_y + 1][new_stone_pos_x] == '#' and map_data[new_stone_pos_y][new_stone_pos_x - 1] == '#') or \
+            (map_data[new_stone_pos_y + 1][new_stone_pos_x] == '#' and map_data[new_stone_pos_y][new_stone_pos_x + 1] == '#')
+
+           
  
 def solve(map_data, stone_costs):
     node_counter = 0
@@ -76,6 +93,8 @@ def solve(map_data, stone_costs):
                 new_stone_pos_y, new_stone_pos_x = stones_cur_pos_y + dy, stones_cur_pos_x + dx
                 if map_data[new_stone_pos_y][new_stone_pos_x] == '#' or (new_stone_pos_y, new_stone_pos_x) in stones_cur_pos:
                     continue
+                if isDeadlock(new_stone_pos_x, new_stone_pos_y, map_data, stones_cur_pos):
+                    continue
                 
                 tmp_stones_cur_pos[num_stone_explored] = (new_stone_pos_y, new_stone_pos_x)
                 is_pushed = True
@@ -86,7 +105,8 @@ def solve(map_data, stone_costs):
             else:
                 frontier.put((heuristic(stones_cur_pos, switches_pos), (next_pos_y, next_pos_x), tmp_stones_cur_pos, path + [move], cost + 1))
             node_counter += 1
-            
+    
+    return None, None, None
             
             
             
