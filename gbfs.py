@@ -42,12 +42,6 @@ def isDeadlock(new_stone_pos_x, new_stone_pos_y, map_data, stones_cur_pos):
     if map_data[new_stone_pos_y][new_stone_pos_x] == '.':
         return False
     
-    if ((new_stone_pos_y, new_stone_pos_x + 1) in stones_cur_pos and map_data[new_stone_pos_y + 1][new_stone_pos_x] == '#' and map_data[new_stone_pos_y + 1][new_stone_pos_x + 1] == '#') or ((new_stone_pos_y, new_stone_pos_x - 1) in stones_cur_pos and map_data[new_stone_pos_y + 1][new_stone_pos_x] == '#' and map_data[new_stone_pos_y + 1][new_stone_pos_x - 1] == '#'):
-        return True
-       
-    if ((new_stone_pos_y + 1, new_stone_pos_x) in stones_cur_pos and map_data[new_stone_pos_y][new_stone_pos_x + 1] == '#' and map_data[new_stone_pos_y + 1][new_stone_pos_x + 1] == '#') or ((new_stone_pos_y - 1, new_stone_pos_x) in stones_cur_pos and map_data[new_stone_pos_y][new_stone_pos_x - 1] == '#' and map_data[new_stone_pos_y + 1][new_stone_pos_x - 1] == '#'):
-        return True
-    
     return  (map_data[new_stone_pos_y - 1][new_stone_pos_x] == '#' and map_data[new_stone_pos_y][new_stone_pos_x - 1] == '#') or \
             (map_data[new_stone_pos_y - 1][new_stone_pos_x] == '#' and map_data[new_stone_pos_y][new_stone_pos_x + 1] == '#') or \
             (map_data[new_stone_pos_y + 1][new_stone_pos_x] == '#' and map_data[new_stone_pos_y][new_stone_pos_x - 1] == '#') or \

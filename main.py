@@ -12,7 +12,7 @@ from A_star import *
 
 
 def main():
-    file_name = "./Inputs/input-01.txt"
+    file_name = "./Inputs/input-02.txt"
     grid, costs = GetMapFromFile(file_name)
     print(grid)
     print(costs)
@@ -27,7 +27,7 @@ def main():
         file_output = "./Outputs/" + file_name.split('/')[2].replace("in", "out")
         with open(file_output, 'w') as file:
             file.write("Map: " + file_name.split('/')[2] + "\n\n")
-            for choice in range(1, 6):
+            for choice in range(1, 7):
                 tracemalloc.start()
                 start_time = time.time()
     
@@ -49,6 +49,10 @@ def main():
                     path, totalCost, node_counter = launchDFS(file_name)
                 elif choice == 5:
                     algorithm = "A*"
+                    
+                    path, totalCost, node_counter = order_A_star(grid, ares_pos, stones, costs, switches)
+                elif choice == 6:
+                    algorithm = "Dijkstra"
                     
                     path, totalCost, node_counter = order_A_star(grid, ares_pos, stones, costs, switches)
                     
