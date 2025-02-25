@@ -46,7 +46,7 @@ def solve(map_data, stone_costs):
                 
 
             if is_pushed:
-                frontier.put((cost + 1 + stone_costs[num_stone_explored], (next_pos_y, next_pos_x), tmp_stones_cur_pos, path + [push]))
+                frontier.put((cost + stone_costs[num_stone_explored], (next_pos_y, next_pos_x), tmp_stones_cur_pos, path + [push]))
             else:
                 frontier.put((cost + 1, (next_pos_y, next_pos_x), tmp_stones_cur_pos, path + [move]))
             node_counter += 1

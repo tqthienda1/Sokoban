@@ -95,7 +95,7 @@ def solve(map_data, stone_costs):
                 
 
             if is_pushed:
-                frontier.put((heuristic(stones_cur_pos, switches_pos), (next_pos_y, next_pos_x), tmp_stones_cur_pos, path + [push], cost + 1 + stone_costs[num_stone_explored]))
+                frontier.put((heuristic(stones_cur_pos, switches_pos), (next_pos_y, next_pos_x), tmp_stones_cur_pos, path + [push], cost + stone_costs[num_stone_explored]))
             else:
                 frontier.put((heuristic(stones_cur_pos, switches_pos), (next_pos_y, next_pos_x), tmp_stones_cur_pos, path + [move], cost + 1))
             node_counter += 1

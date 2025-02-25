@@ -50,7 +50,7 @@ def order_A_star(grid, start_node, stones, costs, switches):
                     continue
                     
                 new_stones[stone_index] = (new_stone_r, new_stone_c)
-                cur_cost += costs[stone_index]
+                cur_cost += (costs[stone_index] - 1)
                 isPush = True
             
             new_g = g + 1
