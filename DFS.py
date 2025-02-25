@@ -72,7 +72,7 @@ def get_next_states(state, game_map):
         
         if (nx, ny) in stones:  
             # if (nx, ny) in switches:
-            #     continue g
+            #     continue 
             next_stone_pos = (nx + dx, ny + dy)
             if (is_valid_move(game_map, next_stone_pos) and next_stone_pos not in stones) and not isDeadlock(next_stone_pos[0], next_stone_pos[1], game_map):
                 cost = stone_weight_dict[(nx, ny)]
