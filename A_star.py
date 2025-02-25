@@ -36,7 +36,7 @@ def order_A_star(grid, start_node, stones, costs, switches):
             if not is_valid(grid, new_r, new_c):
                 continue
 
-            cur_cost = totalCost + 1
+            cur_cost = totalCost
             new_stones = list(stones_pos)
             isPush = False
 
@@ -50,7 +50,7 @@ def order_A_star(grid, start_node, stones, costs, switches):
                     continue
                     
                 new_stones[stone_index] = (new_stone_r, new_stone_c)
-                cur_cost += (costs[stone_index] - 1)
+                cur_cost += costs[stone_index]
                 isPush = True
             
             new_g = g + 1

@@ -25,7 +25,6 @@ def order_bfs(grid, start_node, stones, costs):
                 continue
             
             cur_cost = totalCost
-            cur_cost += 1 
             new_stones = list(stones_pos) 
             isPush = False 
             
@@ -40,7 +39,7 @@ def order_bfs(grid, start_node, stones, costs):
                     continue
                 
                 new_stones[stone_index] = (new_stone_x, new_stone_y)
-                cur_cost += (costs[stone_index] - 1)
+                cur_cost += costs[stone_index]
                 isPush = True
             
             if isPush:
