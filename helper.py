@@ -41,5 +41,14 @@ def find_pos(grid):
 
     return ares_pos, stones, switches_pos
 
+def isDeadlock(new_stone_pos_x, new_stone_pos_y, grid):
+    if grid[new_stone_pos_x, new_stone_pos_y] == '.':
+        return False
+    
+    return  (grid[new_stone_pos_x, new_stone_pos_y - 1] == '#' and grid[new_stone_pos_x - 1, new_stone_pos_y] == '#') or \
+        (grid[new_stone_pos_x, new_stone_pos_y - 1] == '#' and grid[new_stone_pos_x + 1, new_stone_pos_y] == '#') or \
+        (grid[new_stone_pos_x, new_stone_pos_y + 1] == '#' and grid[new_stone_pos_x - 1, new_stone_pos_y] == '#') or \
+        (grid[new_stone_pos_x, new_stone_pos_y + 1] == '#' and grid[new_stone_pos_x + 1, new_stone_pos_y] == '#')
+
 def is_valid(grid, x, y):
-    return 0 <= x < grid.shape[0] and 0 <= y < grid.shape[1] and grid[x,y] != '#' 
+    return 0 <= x < grid.shape[0] and 0 <= y < grid.shape[1] and grid[x,y] != '#'

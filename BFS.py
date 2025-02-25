@@ -37,7 +37,7 @@ def order_bfs(grid, start_node, stones, costs):
                 new_stone_x = new_x + dx
                 new_stone_y = new_y + dy
 
-                if not is_valid(grid, new_stone_x, new_stone_y) or (new_stone_x, new_stone_y) in stones_pos:
+                if not is_valid(grid, new_stone_x, new_stone_y) or (new_stone_x, new_stone_y) in stones_pos or isDeadlock(new_stone_x, new_stone_y, grid):
                     continue
                 
                 new_stones[stone_index] = (new_stone_x, new_stone_y)

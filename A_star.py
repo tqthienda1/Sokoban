@@ -46,7 +46,7 @@ def order_A_star(grid, start_node, stones, costs, switches):
                 new_stone_r = new_r + dr
                 new_stone_c = new_c + dc
 
-                if not is_valid(grid, new_stone_r, new_stone_c) or (new_stone_r, new_stone_c) in stones_pos:
+                if not is_valid(grid, new_stone_r, new_stone_c) or (new_stone_r, new_stone_c) in stones_pos or isDeadlock(new_stone_r, new_stone_c, grid):
                     continue
                     
                 new_stones[stone_index] = (new_stone_r, new_stone_c)

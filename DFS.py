@@ -50,6 +50,15 @@ def is_valid_move(game_map, pos):
     x, y = pos
     return 0 <= x < game_map.shape[0] and 0 <= y < game_map.shape[1] and game_map[x, y] != WALL
 
+def isDeadlock(new_stone_pos_x, new_stone_pos_y, grid):
+    if grid[new_stone_pos_x, new_stone_pos_y] == '.':
+        return False
+    
+    return  (grid[new_stone_pos_x, new_stone_pos_y - 1] == '#' and grid[new_stone_pos_x - 1, new_stone_pos_y] == '#') or \
+        (grid[new_stone_pos_x, new_stone_pos_y - 1] == '#' and grid[new_stone_pos_x + 1, new_stone_pos_y] == '#') or \
+        (grid[new_stone_pos_x, new_stone_pos_y + 1] == '#' and grid[new_stone_pos_x - 1, new_stone_pos_y] == '#') or \
+        (grid[new_stone_pos_x, new_stone_pos_y + 1] == '#' and grid[new_stone_pos_x + 1, new_stone_pos_y] == '#')
+
 
 def get_next_states(state, game_map):
     ares_pos, stones, switches, stone_weights = state
@@ -65,7 +74,7 @@ def get_next_states(state, game_map):
             if (nx, ny) in switches:
                 continue 
             next_stone_pos = (nx + dx, ny + dy)
-            if is_valid_move(game_map, next_stone_pos) and next_stone_pos not in stones:
+            if (is_valid_move(game_map, next_stone_pos) and next_stone_pos not in stones) and not isDeadlock(next_stone_pos[0], next_stone_pos[1], game_map):
                 cost = 1 + stone_weight_dict[(nx, ny)]
                 new_stones = frozenset(s for s in stones if s != (nx, ny)) | {next_stone_pos}
                 new_stone_weights = frozenset((s, w) if s != (nx, ny) else (next_stone_pos, w) for s, w in stone_weights)
