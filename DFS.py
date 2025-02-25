@@ -71,16 +71,16 @@ def get_next_states(state, game_map):
             continue
         
         if (nx, ny) in stones:  
-            if (nx, ny) in switches:
-                continue 
+            # if (nx, ny) in switches:
+            #     continue 
             next_stone_pos = (nx + dx, ny + dy)
             if (is_valid_move(game_map, next_stone_pos) and next_stone_pos not in stones) and not isDeadlock(next_stone_pos[0], next_stone_pos[1], game_map):
-                cost = 1 + stone_weight_dict[(nx, ny)]
+                cost = stone_weight_dict[(nx, ny)]
                 new_stones = frozenset(s for s in stones if s != (nx, ny)) | {next_stone_pos}
                 new_stone_weights = frozenset((s, w) if s != (nx, ny) else (next_stone_pos, w) for s, w in stone_weights)
                 next_states.append(((nx, ny), new_stones, switches, new_stone_weights, push_char, cost))
         else:
-            next_states.append(((nx, ny), stones, switches, stone_weights, move_char, 1))  
+            next_states.append(((nx, ny), stones, switches, stone_weights, move_char, 0))  
     
     return next_states
 
@@ -96,7 +96,6 @@ def sokoban_dfs(game_map, weights):
         ares_pos, stones, switches, stone_weights = state
         
         if is_goal_state(stones, switches):
-
             return path, cost, node_counter
 
         if state in visited:
@@ -107,10 +106,11 @@ def sokoban_dfs(game_map, weights):
             new_ares_pos, new_stones, new_switches, new_stone_weights, move, step_cost = next_state
             if is_goal_state(new_stones, new_switches):
  
-                return path + move, cost + step_cost, node_counter + 1
+                return path, cost, node_counter + 1
             stack.append(((new_ares_pos, new_stones, new_switches, new_stone_weights), path + move, cost + step_cost))
             node_counter += 1
-    return None, None, None
+            
+    return None, None, node_counter
     
 
 def launchDFS(file_name):
