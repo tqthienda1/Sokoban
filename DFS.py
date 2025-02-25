@@ -110,11 +110,13 @@ def sokoban_dfs(game_map, weights):
                 return path + move, cost + step_cost, node_counter + 1
             stack.append(((new_ares_pos, new_stones, new_switches, new_stone_weights), path + move, cost + step_cost))
             node_counter += 1
+    return None, None, None
     
 
 def launchDFS(file_name):
     node_counter = 0
     game_map, weights = GetMapFromFile(file_name)
     solution, total_cost, node_counter = sokoban_dfs(game_map, weights)
+    
 
     return solution, total_cost, node_counter

@@ -17,7 +17,6 @@ def order_bfs(grid, start_node, stones, costs):
         
         if all(grid[x,y] == '.' for x,y in stones_pos):
             return path, totalCost, node_counter
-        
 
         for dx, dy, push, move in directions:
             new_x, new_y = ares_x + dx, ares_y + dy
@@ -49,8 +48,7 @@ def order_bfs(grid, start_node, stones, costs):
             else:
                 queue.append(((new_x, new_y), tuple(new_stones), path + [move], cur_cost))
             node_counter += 1
-
-    return None
+    return None, None, None
 
 
                 

@@ -104,7 +104,7 @@ def sokoban_ucs(game_map, weights):
             heapq.heappush(pq, (cost + step_cost, new_state, path + move))
             node_counter += 1
     
-    return None, None
+    return None, None, None
 
 def launchUCS(file_name):
     game_map, weights = GetMapFromFile(file_name)

@@ -12,7 +12,7 @@ from A_star import *
 
 
 def main():
-    file_name = "./Inputs/input-02.txt"
+    file_name = "./Inputs/input-09.txt"
     grid, costs = GetMapFromFile(file_name)
     print(grid)
     print(costs)
@@ -62,13 +62,13 @@ def main():
                 
                 memory_used = peak / 1024**2
                 
+                file.write(algorithm + '\n')
+                
                 if path:
-                    file.write(algorithm + '\n')
                     file.write(f"Steps: {len(path)}, Weight: {totalCost}, Node: {node_counter}, Time(ms): {round(elapsed_time * 1000, 3)}, Memory(MB) {memory_used:.2f}\n")
                     file.write(textwrap.fill("".join(path), width=100) + "\n\n")
                 else:
-                    file.write("No solution")
-                    break
+                    file.write("No solution\n\n")
                 
                 
                 
