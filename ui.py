@@ -1,5 +1,6 @@
 import pygame
 from PIL import Image
+from sokoban import main
 
 
 pygame.init()
@@ -96,12 +97,23 @@ left_arrow_rect = left_arrow.get_rect()
 left_arrow_rect.topleft = ((WIDTH - left_arrow_rect.width) * 0.25, (HEIGHT - left_arrow_rect.height) / 2)
 right_arrow_rect = right_arrow.get_rect()
 right_arrow_rect.topleft = ((WIDTH - right_arrow_rect.width) * 0.75, (HEIGHT - right_arrow_rect.height) / 2)
+level_button1_rect = level_button1.get_rect()
+level_button1_rect.topleft = ((WIDTH - level_button1_rect.width) * 0.5, (HEIGHT - 100))
+level_button2_rect = level_button1.get_rect()
+level_button3_rect = level_button1.get_rect()
+level_button4_rect = level_button1.get_rect()
+level_button5_rect = level_button1.get_rect()
+level_button6_rect = level_button1.get_rect()
+level_button7_rect = level_button1.get_rect()
+level_button8_rect = level_button1.get_rect()
+level_button9_rect = level_button1.get_rect()
+level_button10_rect = level_button1.get_rect()
 
 level = 1
 
 while is_running:
     
-
+    file_name = ""
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             is_running = False
@@ -116,6 +128,37 @@ while is_running:
                     level = 1
                 else:
                     level += 1
+            elif level_button1_rect.collidepoint(event.pos):
+                file_name = "Inputs/input-01.txt"
+                main(file_name)
+            elif level_button2_rect.collidepoint(event.pos):
+                file_name = "Inputs/input-02.txt"
+                main(file_name)
+            elif level_button3_rect.collidepoint(event.pos):
+                file_name = "Inputs/input-03.txt"
+                main(file_name)
+            elif level_button4_rect.collidepoint(event.pos):
+                file_name = "Inputs/input-04.txt"
+                main(file_name)
+            elif level_button5_rect.collidepoint(event.pos):
+                file_name = "Inputs/input-05.txt"
+                main(file_name)
+            elif level_button6_rect.collidepoint(event.pos):
+                file_name = "Inputs/input-06.txt"
+                main(file_name)
+            elif level_button7_rect.collidepoint(event.pos):
+                file_name = "Inputs/input-07.txt"
+                main(file_name)
+            elif level_button8_rect.collidepoint(event.pos):
+                file_name = "Inputs/input-08.txt"
+                main(file_name)
+            elif level_button9_rect.collidepoint(event.pos):
+                file_name = "Inputs/input-09.txt"
+                main(file_name)
+            elif level_button10_rect.collidepoint(event.pos):
+                file_name = "Inputs/input-10.txt"
+                main(file_name)
+
                 
 
     window_surface.blit(background_menu, (0, 0))
