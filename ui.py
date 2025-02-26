@@ -10,6 +10,8 @@ WIDTH, HEIGHT = info.current_w, info.current_h
 pygame.display.set_caption('Sokoban')
 window_surface = pygame.display.set_mode((WIDTH, HEIGHT), pygame.NOFRAME)
 
+maps = ["input-01.txt", "input-02.txt", "input-03.txt", "input-04.txt", "input-05.txt", "input-06.txt", "input-07.txt", "input-08.txt", "input-09.txt", "input-10.txt"]
+
 
 is_running = True
 
@@ -96,6 +98,13 @@ left_arrow_rect = left_arrow.get_rect()
 left_arrow_rect.topleft = ((WIDTH - left_arrow_rect.width) * 0.25, (HEIGHT - left_arrow_rect.height) / 2)
 right_arrow_rect = right_arrow.get_rect()
 right_arrow_rect.topleft = ((WIDTH - right_arrow_rect.width) * 0.75, (HEIGHT - right_arrow_rect.height) / 2)
+exit_button = pygame.image.load("assets/exit.png")
+exit_button_width, exit_button_height = exit_button.get_size()
+exit_button = pygame.transform.scale(exit_button, (exit_button_width *0.7, exit_button_height * 0.7))
+exit_button_width, exit_button_height = exit_button.get_size()
+exit_button_rect = exit_button.get_rect()
+exit_button_rect.topleft = ((WIDTH - exit_button_width) / 2, HEIGHT * 0.9)
+
 
 level = 1
 
@@ -116,6 +125,10 @@ while is_running:
                     level = 1
                 else:
                     level += 1
+            elif exit_button_rect.collidepoint(event.pos):
+                is_running = False
+                pygame.quit()
+                exit()
                 
 
     window_surface.blit(background_menu, (0, 0))
@@ -153,6 +166,10 @@ while is_running:
         
     window_surface.blit(left_arrow, ((WIDTH - left_arrow_width) * 0.25, (HEIGHT - left_arrow_height) / 2))
     window_surface.blit(right_arrow, ((WIDTH - right_arrow_width) * 0.75, (HEIGHT - right_arrow_height) / 2))
+    window_surface.blit(exit_button, ((WIDTH - exit_button_width) / 2, HEIGHT * 0.9))
+    
     
 
     pygame.display.update()
+    
+    
