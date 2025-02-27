@@ -109,8 +109,17 @@ def main(file_name):
     background_tile = pygame.image.load("assets/stoneC.png")
     background_width, background_height = background_tile.get_size()
 
-    path, totalCost, node_counter = None, None, None
+    # path, totalCost, node_counter = None, None, None
     ares_pos, stones, switches = find_pos(game_map)
+    tracemalloc.start()
+    start_time = time.time()
+    path, totalCost, node_counter = launchUCS(file_name)
+    elapsed_time = time.time() - start_time
+    memory_used = tracemalloc.get_traced_memory()[1] / 1024**2
+    tracemalloc.stop()
+
+    clock = pygame.time.Clock()
+    path_gen = move_ares(game_map, path)
 
     start_button = pygame.image.load("assets/start.png")
     start_button_width, start_button_height = start_button.get_size()
@@ -208,31 +217,80 @@ def main(file_name):
         start_button_rect = start_button.get_rect()
         start_button_rect.topleft = ((screen_width - square_size - center_x_start - BFS_button_width, y))
 
-        tracemalloc.start()
-        start_time = time.time()
+        # tracemalloc.start()
+        # start_time = time.time()
 
         for event in pygame.event.get():
             if (event.type == pygame.MOUSEBUTTONDOWN):
                 if (start_button_rect.collidepoint(event.pos)):
                     start = True
                 elif (BFS_button_rect.collidepoint(event.pos)):
+                    ares_pos, stones, switches = find_pos(game_map)
+                    tracemalloc.start()
+                    start_time = time.time()
                     path, totalCost, node_counter = order_bfs(game_map, ares_pos, stones, weights)
+                    elapsed_time = time.time() - start_time
+                    memory_used = tracemalloc.get_traced_memory()[1] / 1024**2
+                    tracemalloc.stop()
+
+                    clock = pygame.time.Clock()
+                    path_gen = move_ares(game_map, path)
                 elif (GBFS_button_rect.collidepoint(event.pos)):
+                    ares_pos, stones, switches = find_pos(game_map)
+                    tracemalloc.start()
+                    start_time = time.time()
                     path, totalCost, node_counter = launch(file_name)
+                    elapsed_time = time.time() - start_time
+                    memory_used = tracemalloc.get_traced_memory()[1] / 1024**2
+                    tracemalloc.stop()
+
+                    clock = pygame.time.Clock()
+                    path_gen = move_ares(game_map, path)
                 elif (UCS_button_rect.collidepoint(event.pos)):
+                    ares_pos, stones, switches = find_pos(game_map)
+                    tracemalloc.start()
+                    start_time = time.time()
                     path, totalCost, node_counter = launchUCS(file_name)
+                    elapsed_time = time.time() - start_time
+                    memory_used = tracemalloc.get_traced_memory()[1] / 1024**2
+                    tracemalloc.stop()
+
+                    clock = pygame.time.Clock()
+                    path_gen = move_ares(game_map, path)
                 elif (DFS_button_rect.collidepoint(event.pos)):
+                    ares_pos, stones, switches = find_pos(game_map)
+                    tracemalloc.start()
+                    start_time = time.time()
                     path, totalCost, node_counter = launchDFS(file_name)
+                    elapsed_time = time.time() - start_time
+                    memory_used = tracemalloc.get_traced_memory()[1] / 1024**2
+                    tracemalloc.stop()
+
+                    clock = pygame.time.Clock()
+                    path_gen = move_ares(game_map, path)
                 elif (AStar_button_rect.collidepoint(event.pos)):
+                    ares_pos, stones, switches = find_pos(game_map)
+                    tracemalloc.start()
+                    start_time = time.time()
                     path, totalCost, node_counter = order_A_star(game_map, ares_pos, stones, weights, switches)
+                    elapsed_time = time.time() - start_time
+                    memory_used = tracemalloc.get_traced_memory()[1] / 1024**2
+                    tracemalloc.stop()
+
+                    clock = pygame.time.Clock()
+                    path_gen = move_ares(game_map, path)
                 elif (Dijsktra_button_rect.collidepoint(event.pos)):
+                    ares_pos, stones, switches = find_pos(game_map)
+                    tracemalloc.start()
+                    start_time = time.time()
                     path, totalCost, node_counter = launchDijkstra(file_name)
+                    path, totalCost, node_counter = order_A_star(game_map, ares_pos, stones, weights, switches)
+                    elapsed_time = time.time() - start_time
+                    memory_used = tracemalloc.get_traced_memory()[1] / 1024**2
+                    tracemalloc.stop()
 
-        elapsed_time = time.time() - start_time
-        current, peak = tracemalloc.get_traced_memory()
-        tracemalloc.stop()
-
-        memory_used = peak / 1024**2
+                    clock = pygame.time.Clock()
+                    path_gen = move_ares(game_map, path)
 
         info_text = [
             f"Steps: {len(path) if path is not None else 0}",
@@ -253,9 +311,7 @@ def main(file_name):
         
         offset_x, offset_y = draw_map(screen, game_map, images, screen_width, screen_height, square_size)
 
-        if(start == True):  
-            while 1:    
-                path_gen = move_ares(game_map, path)
+        if(start == True):      
                 try:
                     game_map = next(path_gen)
                 except StopIteration:
@@ -264,9 +320,7 @@ def main(file_name):
                         text_surface = font.render(line, True, (255, 255, 255))  # Màu đen
                         screen.blit(text_surface, (center_x_start + center_width + 92, y))
                         y += 100  # Tăng vị trí xuống mỗi dòng
-                    pass
-                break  # Kết thúc di chuyển
-
+                    pass  # Kết thúc di chuyển
 
         pygame.display.flip()
         clock.tick(5)
