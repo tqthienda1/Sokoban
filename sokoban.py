@@ -144,6 +144,10 @@ def main(file_name):
     Dijsktra_button_width, Dijsktra_button_height = Dijsktra_button.get_size()
     Dijsktra_button = pygame.transform.scale(Dijsktra_button, (Dijsktra_button_width * 0.7, Dijsktra_button_height * 0.7))
     Dijsktra_button_width, Dijsktra_button_height = Dijsktra_button.get_size()
+    exit_button = pygame.image.load("assets/exit.png")
+    exit_button_width, exit_button_height = exit_button.get_size()
+    exit_button = pygame.transform.scale(exit_button, (exit_button_width * 0.7, exit_button_height * 0.7))
+    exit_button_width, exit_button_height = exit_button.get_size()
 
     background_menu = pygame.image.load("assets/menu_background.png")  
     background_menu = pygame.transform.scale(background_menu, (screen_width, screen_height))  
@@ -176,31 +180,34 @@ def main(file_name):
         y = screen_height / 7
         screen.blit(BFS_button, ((center_x_start - BFS_button_width) / 2, y))
         BFS_button_rect = BFS_button.get_rect()
-        BFS_button_rect.topleft = ((screen_width - square_size - center_x_start - GBFS_button_width, y))
+        BFS_button_rect.topleft = ((screen_width - square_size - center_x_start - BFS_button_width, y))
         y += 100
         screen.blit(GBFS_button, ((center_x_start - GBFS_button_width) / 2, y))
         GBFS_button_rect = GBFS_button.get_rect()
-        GBFS_button_rect.topleft = ((screen_width - square_size - center_x_start - BFS_button_width, y))
+        GBFS_button_rect.topleft = ((screen_width - square_size - center_x_start - GBFS_button_width, y))
         y += 100
         screen.blit(UCS_button, ((center_x_start - UCS_button_width) / 2, y))
         UCS_button_rect = UCS_button.get_rect()
-        UCS_button_rect.topleft = ((screen_width - square_size - center_x_start - BFS_button_width, y))
+        UCS_button_rect.topleft = ((screen_width - square_size - center_x_start - UCS_button_width, y))
         y += 100
         screen.blit(DFS_button, ((center_x_start - DFS_button_width) / 2, y))
         DFS_button_rect = DFS_button.get_rect()
-        DFS_button_rect.topleft = ((screen_width - square_size - center_x_start - BFS_button_width, y))
+        DFS_button_rect.topleft = ((screen_width - square_size - center_x_start - DFS_button_width, y))
         y += 100
         screen.blit(AStar_button, ((center_x_start - AStar_button_width) / 2, y))
         AStar_button_rect = AStar_button.get_rect()
-        AStar_button_rect.topleft = ((screen_width - square_size - center_x_start - BFS_button_width, y))
+        AStar_button_rect.topleft = ((screen_width - square_size - center_x_start - AStar_button_width, y))
         y += 100
         screen.blit(Dijsktra_button, ((center_x_start - Dijsktra_button_width) / 2, y))
         Dijsktra_button_rect = Dijsktra_button.get_rect()
-        Dijsktra_button_rect.topleft = ((screen_width - square_size - center_x_start - BFS_button_width, y))
+        Dijsktra_button_rect.topleft = ((screen_width - square_size - center_x_start - Dijsktra_button_width, y))
         y += 250
         screen.blit(start_button, ((center_x_start - start_button_width) / 2, y))
         start_button_rect = start_button.get_rect()
-        start_button_rect.topleft = ((screen_width - square_size - center_x_start - BFS_button_width, y))
+        start_button_rect.topleft = ((screen_width - square_size - center_x_start - start_button_width, y))
+        screen.blit(exit_button, ((screen_width - exit_button_width) / 2, y))
+        exit_button_rect = exit_button.get_rect()
+        exit_button_rect.topleft = ((screen_width - exit_button_width) / 2, y)
 
         if(button_enable == True):
             for event in pygame.event.get():
