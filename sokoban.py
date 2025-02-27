@@ -164,6 +164,10 @@ def main(file_name):
         center_x_start = (screen_width - square_size) / 2
         center_x_end = screen_width - center_x_start 
         center_width = screen_width - 2 * center_x_start
+        
+        for x in range(int(center_x_start), screen_width - int(center_x_start), background_width):
+            for y in range(0, screen_height, background_height):
+                screen.blit(background_tile, (x, y))
 
         x = center_x_start
         while x < center_x_end:
