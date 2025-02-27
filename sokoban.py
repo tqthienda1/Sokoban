@@ -2,6 +2,7 @@ import pygame
 import numpy as np
 import time
 import tracemalloc
+import copy
 
 from BFS import *
 from gbfs import *
@@ -21,7 +22,7 @@ FLOOR = ' '
 
 pygame.init()
 screen_width, screen_height = pygame.display.get_desktop_sizes()[0]
-CELL_SIZE = screen_width / 30
+CELL_SIZE = screen_width / 54
 
 def load_images():
     return {
@@ -59,6 +60,7 @@ def draw_map(screen, game_map, images, screen_width, screen_height, square_size)
                 screen.blit(image, (x * CELL_SIZE + offset_x, y * CELL_SIZE + offset_y))
 
             center_x_start = (screen_width - square_size) / 2
+    # print(game_map)
 
     return offset_x, offset_y 
 
@@ -85,7 +87,7 @@ def move_ares(game_map, path):
             game_map[nx, ny] = ARES_ON_SWITCH if game_map[nx, ny] == SWITCH else ARES
             game_map[px, py] = SWITCH if game_map[px, py] == ARES_ON_SWITCH else ' '
 
-        time.sleep(0.3)
+        time.sleep(0.1)
         yield game_map.copy()
 
 def main(file_name):
@@ -97,6 +99,7 @@ def main(file_name):
     screen = pygame.display.set_mode((screen_width, screen_height), pygame.NOFRAME)
 
     game_map, weights = load_map(file_name)
+    initial_state = game_map.copy()
     images = load_images()
     border_tile = pygame.image.load("assets/floor.png")
     border_tile = pygame.transform.scale(border_tile, (CELL_SIZE, CELL_SIZE))
@@ -144,18 +147,13 @@ def main(file_name):
 
     background_menu = pygame.image.load("assets/menu_background.png")  
     background_menu = pygame.transform.scale(background_menu, (screen_width, screen_height))  
-
+    
+    button_enable = True
     start = False
     running = True
     while running:
         screen.fill((255, 255, 255))
         screen.blit(background_menu, (0, 0))
-
-        # center_x_start = (screen_width - game_map.shape[1] * CELL_SIZE) // 2
-        # center_x_end = center_x_start + game_map.shape[1] * CELL_SIZE
-
-        # center_y_start = (screen_height - game_map.shape[0] * CELL_SIZE) // 2
-        # center_y_end = center_y_start + game_map.shape[0] * CELL_SIZE
 
         center_x_start = (screen_width - square_size) / 2
         center_x_end = screen_width - center_x_start 
@@ -178,18 +176,8 @@ def main(file_name):
         y = 0
         while y < screen_height:
             screen.blit(border_tile, (center_x_start, y))
-            screen.blit(border_tile, (center_x_start + center_width - border_width + CELL_SIZE / 8, y))
+            screen.blit(border_tile, (center_x_end, y))
             y += border_height
-        
-        # x = 0
-        # y = 0
-        # while x < center_x_start:
-        #     y = 0
-        #     while y < screen_height:
-        #         screen.blit(border_tile_side, (x - CELL_SIZE / 2, y))
-        #         screen.blit(border_tile_side, (x + center_x_start + center_width + CELL_SIZE / 8, y))
-        #         y += border_height
-        #     x += border_width
 
         y = screen_height / 7
         screen.blit(BFS_button, ((center_x_start - BFS_button_width) / 2, y))
@@ -220,88 +208,107 @@ def main(file_name):
         start_button_rect = start_button.get_rect()
         start_button_rect.topleft = ((screen_width - square_size - center_x_start - BFS_button_width, y))
 
+        if(button_enable == True):
+            for event in pygame.event.get():
+                if (event.type == pygame.MOUSEBUTTONDOWN):
+                    if (start_button_rect.collidepoint(event.pos)):
+                        start = True
+                        button_enable = False
+                        if(algorithm == "Breadth-First Search"):
+                            ares_pos, stones, switches = find_pos(game_map)
+                            tracemalloc.start()
+                            start_time = time.time()
+                            path, totalCost, node_counter = order_bfs(game_map, ares_pos, stones, weights)
+                            elapsed_time = time.time() - start_time
+                            memory_used = tracemalloc.get_traced_memory()[1] / 1024**2
+                            tracemalloc.stop()
 
-        for event in pygame.event.get():
-            if (event.type == pygame.MOUSEBUTTONDOWN):
-                if (start_button_rect.collidepoint(event.pos)):
-                    start = True
-                elif (BFS_button_rect.collidepoint(event.pos)):
-                    algorithm = "Breadth-First Search"
-                    ares_pos, stones, switches = find_pos(game_map)
-                    tracemalloc.start()
-                    start_time = time.time()
-                    path, totalCost, node_counter = order_bfs(game_map, ares_pos, stones, weights)
-                    elapsed_time = time.time() - start_time
-                    memory_used = tracemalloc.get_traced_memory()[1] / 1024**2
-                    tracemalloc.stop()
+                            clock = pygame.time.Clock()
+                            path_gen = move_ares(game_map, path)
+                        elif(algorithm == "Greedy \nBest-First Search"):
+                            ares_pos, stones, switches = find_pos(game_map)
+                            tracemalloc.start()
+                            start_time = time.time()
+                            path, totalCost, node_counter = launch(file_name)
+                            elapsed_time = time.time() - start_time
+                            memory_used = tracemalloc.get_traced_memory()[1] / 1024**2
+                            tracemalloc.stop()
 
-                    clock = pygame.time.Clock()
-                    path_gen = move_ares(game_map, path)
-                elif (GBFS_button_rect.collidepoint(event.pos)):
-                    algorithm = "Greedy \nBest-First Search"
-                    ares_pos, stones, switches = find_pos(game_map)
-                    tracemalloc.start()
-                    start_time = time.time()
-                    path, totalCost, node_counter = launch(file_name)
-                    elapsed_time = time.time() - start_time
-                    memory_used = tracemalloc.get_traced_memory()[1] / 1024**2
-                    tracemalloc.stop()
+                            clock = pygame.time.Clock()
+                            path_gen = move_ares(game_map, path)
+                        elif(algorithm == "Uniform-Cost Search"):
+                            ares_pos, stones, switches = find_pos(game_map)
+                            tracemalloc.start()
+                            start_time = time.time()
+                            path, totalCost, node_counter = launchUCS(file_name)
+                            elapsed_time = time.time() - start_time
+                            memory_used = tracemalloc.get_traced_memory()[1] / 1024**2
+                            tracemalloc.stop()
 
-                    clock = pygame.time.Clock()
-                    path_gen = move_ares(game_map, path)
-                elif (UCS_button_rect.collidepoint(event.pos)):
-                    algorithm = "Uniform-Cost Search"
-                    ares_pos, stones, switches = find_pos(game_map)
-                    tracemalloc.start()
-                    start_time = time.time()
-                    path, totalCost, node_counter = launchUCS(file_name)
-                    elapsed_time = time.time() - start_time
-                    memory_used = tracemalloc.get_traced_memory()[1] / 1024**2
-                    tracemalloc.stop()
+                            clock = pygame.time.Clock()
+                            path_gen = move_ares(game_map, path)
+                        elif(algorithm == "Depth-First Search"):
+                            ares_pos, stones, switches = find_pos(game_map)
+                            tracemalloc.start()
+                            start_time = time.time()
+                            path, totalCost, node_counter = launchDFS(file_name)
+                            elapsed_time = time.time() - start_time
+                            memory_used = tracemalloc.get_traced_memory()[1] / 1024**2
+                            tracemalloc.stop()
 
-                    clock = pygame.time.Clock()
-                    path_gen = move_ares(game_map, path)
-                elif (DFS_button_rect.collidepoint(event.pos)):
-                    algorithm = "Depth-First Search"
-                    ares_pos, stones, switches = find_pos(game_map)
-                    tracemalloc.start()
-                    start_time = time.time()
-                    path, totalCost, node_counter = launchDFS(file_name)
-                    elapsed_time = time.time() - start_time
-                    memory_used = tracemalloc.get_traced_memory()[1] / 1024**2
-                    tracemalloc.stop()
+                            clock = pygame.time.Clock()
+                            path_gen = move_ares(game_map, path)
+                        elif(algorithm == "A* Search"):
+                            ares_pos, stones, switches = find_pos(game_map)
+                            tracemalloc.start()
+                            start_time = time.time()
+                            path, totalCost, node_counter = order_A_star(game_map, ares_pos, stones, weights, switches)
+                            elapsed_time = time.time() - start_time
+                            memory_used = tracemalloc.get_traced_memory()[1] / 1024**2
+                            tracemalloc.stop()
 
-                    clock = pygame.time.Clock()
-                    path_gen = move_ares(game_map, path)
-                elif (AStar_button_rect.collidepoint(event.pos)):
-                    algorithm = "A* Search"
-                    ares_pos, stones, switches = find_pos(game_map)
-                    tracemalloc.start()
-                    start_time = time.time()
-                    path, totalCost, node_counter = order_A_star(game_map, ares_pos, stones, weights, switches)
-                    elapsed_time = time.time() - start_time
-                    memory_used = tracemalloc.get_traced_memory()[1] / 1024**2
-                    tracemalloc.stop()
+                            clock = pygame.time.Clock()
+                            path_gen = move_ares(game_map, path)
+                        elif(algorithm == "Dijsktra Search"):
+                            ares_pos, stones, switches = find_pos(game_map)
+                            tracemalloc.start()
+                            start_time = time.time()
+                            path, totalCost, node_counter = launchDijkstra(file_name)
+                            path, totalCost, node_counter = order_A_star(game_map, ares_pos, stones, weights, switches)
+                            elapsed_time = time.time() - start_time
+                            memory_used = tracemalloc.get_traced_memory()[1] / 1024**2
+                            tracemalloc.stop()
 
-                    clock = pygame.time.Clock()
-                    path_gen = move_ares(game_map, path)
-                elif (Dijsktra_button_rect.collidepoint(event.pos)):
-                    algorithm = "Dijsktra Search"
-                    ares_pos, stones, switches = find_pos(game_map)
-                    tracemalloc.start()
-                    start_time = time.time()
-                    path, totalCost, node_counter = launchDijkstra(file_name)
-                    path, totalCost, node_counter = order_A_star(game_map, ares_pos, stones, weights, switches)
-                    elapsed_time = time.time() - start_time
-                    memory_used = tracemalloc.get_traced_memory()[1] / 1024**2
-                    tracemalloc.stop()
-
-                    clock = pygame.time.Clock()
-                    path_gen = move_ares(game_map, path)
+                            clock = pygame.time.Clock()
+                            path_gen = move_ares(game_map, path)
+                    elif (BFS_button_rect.collidepoint(event.pos)):
+                        algorithm = "Breadth-First Search"
+                        start = False
+                        game_map = initial_state.copy()
+                    elif (GBFS_button_rect.collidepoint(event.pos)):
+                        algorithm = "Greedy \nBest-First Search"
+                        start = False
+                        game_map = initial_state.copy()
+                    elif (UCS_button_rect.collidepoint(event.pos)):
+                        algorithm = "Uniform-Cost Search"
+                        start = False
+                        game_map = initial_state.copy()
+                    elif (DFS_button_rect.collidepoint(event.pos)):
+                        algorithm = "Depth-First Search"
+                        start = False
+                        game_map = initial_state.copy()
+                    elif (AStar_button_rect.collidepoint(event.pos)):
+                        algorithm = "A* Search"
+                        start = False
+                        game_map = initial_state.copy()
+                    elif (Dijsktra_button_rect.collidepoint(event.pos)):
+                        algorithm = "Dijsktra Search"
+                        start = False
+                        game_map = initial_state.copy()
 
         y = (screen_height / 4) - 200
         text_surface = font.render(algorithm, True, (255, 255, 255))
-        screen.blit(text_surface, (center_x_start + center_width + CELL_SIZE, y))
+        screen.blit(text_surface, (center_x_start + center_width + 2*CELL_SIZE, y))
 
         info_text = [
             f"Steps: {len(path) if path is not None else 0}",
@@ -329,10 +336,9 @@ def main(file_name):
                     y = screen_height / 4 
                     for line in info_text:
                         text_surface = font.render(line, True, (255, 255, 255))
-                        screen.blit(text_surface, (center_x_start + center_width + 64, y))
+                        screen.blit(text_surface, (screen_width - center_x_start + 2*CELL_SIZE, y))
                         y += 100 
-                        
-                    pass
+                    button_enable = True
 
         pygame.display.flip()
         clock.tick(5)
