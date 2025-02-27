@@ -71,12 +71,12 @@ def get_next_states(state, game_map):
         if (nx, ny) in stones:  
             next_stone_pos = (nx + dx, ny + dy)
             if (is_valid_move(game_map, next_stone_pos) and next_stone_pos not in stones) and not isDeadlock(next_stone_pos[0], next_stone_pos[1], game_map):
-                cost = 1 + stone_weight_dict[(nx, ny)]
+                cost = stone_weight_dict[(nx, ny)]
                 new_stones = frozenset(s for s in stones if s != (nx, ny)) | {next_stone_pos}
                 new_stone_weights = frozenset((s, w) if s != (nx, ny) else (next_stone_pos, w) for s, w in stone_weights)
                 next_states.append(((nx, ny), new_stones, switches, new_stone_weights, push_char, cost))
         else:
-            next_states.append(((nx, ny), stones, switches, stone_weights, move_char, 1))  
+            next_states.append(((nx, ny), stones, switches, stone_weights, move_char, 0))  
     
     return next_states
 

@@ -2,7 +2,7 @@ from gbfs import *
 
 def solve(map_data, stone_costs):
     node_counter = 0
-    directions = [[-1, 0, 'U', 'u'], [1, 0, 'D', 'd'], [0, -1, 'L', 'l'], [0, 1, 'R', 'r']]
+    directions = [[0, -1, 0, 'U', 'u'], [0, 1, 0, 'D', 'd'], [0, 0, -1, 'L', 'l'], [0, 0, 1, 'R', 'r']]
     ares_first_pos, stones_first_pos, switches_pos = findPos(map_data)
     frontier = PriorityQueue()
     frontier.put((0, ares_first_pos, stones_first_pos, []))
@@ -21,7 +21,7 @@ def solve(map_data, stone_costs):
             return path, cost, node_counter
         
 
-        for dy, dx, push, move, _ in directions:
+        for _, dy, dx, push, move in directions:
             next_pos_y, next_pos_x =  dy + ares_cur_pos[0], dx + ares_cur_pos[1]
             
             tmp_stones_cur_pos = stones_cur_pos[:]

@@ -55,7 +55,7 @@ def main():
                 elif choice == 6:
                     algorithm = "Dijkstra"
                     
-                    path, totalCost, node_counter = order_A_star(grid, ares_pos, stones, costs, switches)
+                    path, totalCost, node_counter = launchDijkstra(file_name)
                     
                 elapsed_time = time.time() - start_time
                 current, peak = tracemalloc.get_traced_memory()
