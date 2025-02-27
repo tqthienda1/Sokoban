@@ -21,7 +21,7 @@ FLOOR = ' '
 
 pygame.init()
 screen_width, screen_height = pygame.display.get_desktop_sizes()[0]
-CELL_SIZE = screen_width / 30
+CELL_SIZE = screen_width * 0.025
 
 def load_images():
     return {
@@ -91,7 +91,7 @@ def move_ares(game_map, path):
 def main(file_name):
     pygame.font.init()
     screen_width, screen_height = pygame.display.get_desktop_sizes()[0]
-    font_size = screen_height * 0.03
+    font_size = screen_height * 0.025
     font = pygame.font.Font("assets\MinecraftRegular-Bmg3.otf", int(font_size))
     square_size = min(screen_width, screen_height)
     screen = pygame.display.set_mode((screen_width, screen_height), pygame.NOFRAME)
@@ -178,7 +178,7 @@ def main(file_name):
         y = 0
         while y < screen_height:
             screen.blit(border_tile, (center_x_start, y))
-            screen.blit(border_tile, (center_x_start + center_width - border_width + CELL_SIZE / 8, y))
+            screen.blit(border_tile, (t + center_width - border_width + CELL_SIZE / 8, y))
             y += border_height
         
         # x = 0
@@ -238,7 +238,7 @@ def main(file_name):
                     clock = pygame.time.Clock()
                     path_gen = move_ares(game_map, path)
                 elif (GBFS_button_rect.collidepoint(event.pos)):
-                    algorithm = "Greedy \nBest-First Search"
+                    algorithm = "Greedy\nBest-First Search"
                     ares_pos, stones, switches = find_pos(game_map)
                     tracemalloc.start()
                     start_time = time.time()
