@@ -11,7 +11,6 @@ from DFS import *
 from A_star import *
 from dijkstra import *
 
-# Định nghĩa các ký hiệu trên bản đồ
 WALL = '#'
 STONE = '$'
 ARES = '@'
@@ -19,8 +18,6 @@ SWITCH = '.'
 STONE_ON_SWITCH = '*'
 ARES_ON_SWITCH = '+'
 FLOOR = ' '
-
-# Màu sắc tương ứng
 
 CELL_SIZE = 64
 
@@ -42,19 +39,16 @@ def load_map(filename):
 def draw_map(screen, game_map, images, screen_width, screen_height, square_size):
     rows, cols = game_map.shape
 
-    # Xác định phần giữa màn hình
     center_x_start = (screen_width - square_size) / 2
     center_x_end = screen_width - center_x_start
     center_width = center_x_end - center_x_start
 
-    # Căn giữa game map trong phần giữa
     map_width = cols * CELL_SIZE
     map_height = rows * CELL_SIZE
 
     offset_x = center_x_start + (center_width - map_width) // 2
-    offset_y = (screen_height - map_height) // 2  # Căn giữa theo chiều dọc
+    offset_y = (screen_height - map_height) // 2
 
-    # Vẽ bản đồ game
     for y in range(rows):
         for x in range(cols):
             cell_type = game_map[y, x]
@@ -64,7 +58,7 @@ def draw_map(screen, game_map, images, screen_width, screen_height, square_size)
 
             center_x_start = (screen_width - square_size) / 2
 
-    return offset_x, offset_y  # Trả về vị trí căn chỉnh để dùng trong di chuyển
+    return offset_x, offset_y 
 
 def find_player(game_map):
     positions = np.where((game_map == ARES) | (game_map == ARES_ON_SWITCH))
@@ -77,20 +71,19 @@ def move_ares(game_map, path):
     for move in path:
         dx, dy = direction_map[move]
         px, py = find_player(game_map)
-        nx, ny = px + dx, py + dy  # Vị trí tiếp theo của Ares
-        nnx, nny = nx + dx, ny + dy  # Ô tiếp theo của viên đá nếu bị đẩy
+        nx, ny = px + dx, py + dy 
+        nnx, nny = nx + dx, ny + dy 
 
-        if game_map[nx, ny] in [STONE, STONE_ON_SWITCH]:  # Nếu Ares gặp đá
-            if game_map[nnx, nny] in [' ', SWITCH]:  # Kiểm tra xem có thể đẩy đá không
-                # Di chuyển viên đá
+        if game_map[nx, ny] in [STONE, STONE_ON_SWITCH]:
+            if game_map[nnx, nny] in [' ', SWITCH]: 
                 game_map[nnx, nny] = STONE_ON_SWITCH if game_map[nnx, nny] == SWITCH else STONE
                 game_map[nx, ny] = ARES_ON_SWITCH if game_map[nx, ny] == STONE_ON_SWITCH else ARES
                 game_map[px, py] = SWITCH if game_map[px, py] == ARES_ON_SWITCH else ' '
-        elif game_map[nx, ny] in [' ', SWITCH]:  # Nếu Ares có thể đi tới
+        elif game_map[nx, ny] in [' ', SWITCH]:
             game_map[nx, ny] = ARES_ON_SWITCH if game_map[nx, ny] == SWITCH else ARES
             game_map[px, py] = SWITCH if game_map[px, py] == ARES_ON_SWITCH else ' '
 
-        time.sleep(0.3)  # Hiệu ứng di chuyển chậm lại
+        time.sleep(0.3)
         yield game_map.copy()
 
 def main(file_name):
@@ -110,7 +103,8 @@ def main(file_name):
     background_width, background_height = background_tile.get_size()
 
     path, totalCost, node_counter = None, None, None
-    ares_pos, stones, switches = find_pos(game_map)
+    elapsed_time, memory_used = 1, 1
+    algorithm = ""
 
     start_button = pygame.image.load("assets/start.png")
     start_button_width, start_button_height = start_button.get_size()
@@ -137,17 +131,14 @@ def main(file_name):
     start = False
     running = True
     while running:
-        screen.fill((255, 255, 255))  # Màu nền
+        screen.fill((255, 255, 255))
 
-        # Xác định phạm vi trung tâm màn hình
         center_x_start = (screen_width - game_map.shape[1] * CELL_SIZE) // 2
         center_x_end = center_x_start + game_map.shape[1] * CELL_SIZE
 
         center_y_start = (screen_height - game_map.shape[0] * CELL_SIZE) // 2
         center_y_end = center_y_start + game_map.shape[0] * CELL_SIZE
 
-
-        # Lót nền trong phạm vi màn hình nhưng không tràn vào vùng bản đồ
         for x in range(0, screen_width, background_width):
             for y in range(0, screen_height, background_height):
                 screen.blit(background_tile, (x, y))
@@ -208,31 +199,88 @@ def main(file_name):
         start_button_rect = start_button.get_rect()
         start_button_rect.topleft = ((screen_width - square_size - center_x_start - BFS_button_width, y))
 
-        tracemalloc.start()
-        start_time = time.time()
 
         for event in pygame.event.get():
             if (event.type == pygame.MOUSEBUTTONDOWN):
                 if (start_button_rect.collidepoint(event.pos)):
                     start = True
                 elif (BFS_button_rect.collidepoint(event.pos)):
+                    algorithm = "Breadth-First Search"
+                    ares_pos, stones, switches = find_pos(game_map)
+                    tracemalloc.start()
+                    start_time = time.time()
                     path, totalCost, node_counter = order_bfs(game_map, ares_pos, stones, weights)
+                    elapsed_time = time.time() - start_time
+                    memory_used = tracemalloc.get_traced_memory()[1] / 1024**2
+                    tracemalloc.stop()
+
+                    clock = pygame.time.Clock()
+                    path_gen = move_ares(game_map, path)
                 elif (GBFS_button_rect.collidepoint(event.pos)):
+                    algorithm = "Greedy Best-First Search"
+                    ares_pos, stones, switches = find_pos(game_map)
+                    tracemalloc.start()
+                    start_time = time.time()
                     path, totalCost, node_counter = launch(file_name)
+                    elapsed_time = time.time() - start_time
+                    memory_used = tracemalloc.get_traced_memory()[1] / 1024**2
+                    tracemalloc.stop()
+
+                    clock = pygame.time.Clock()
+                    path_gen = move_ares(game_map, path)
                 elif (UCS_button_rect.collidepoint(event.pos)):
+                    algorithm = "Uniform-Cost Search"
+                    ares_pos, stones, switches = find_pos(game_map)
+                    tracemalloc.start()
+                    start_time = time.time()
                     path, totalCost, node_counter = launchUCS(file_name)
+                    elapsed_time = time.time() - start_time
+                    memory_used = tracemalloc.get_traced_memory()[1] / 1024**2
+                    tracemalloc.stop()
+
+                    clock = pygame.time.Clock()
+                    path_gen = move_ares(game_map, path)
                 elif (DFS_button_rect.collidepoint(event.pos)):
+                    algorithm = "Depth-First Search"
+                    ares_pos, stones, switches = find_pos(game_map)
+                    tracemalloc.start()
+                    start_time = time.time()
                     path, totalCost, node_counter = launchDFS(file_name)
+                    elapsed_time = time.time() - start_time
+                    memory_used = tracemalloc.get_traced_memory()[1] / 1024**2
+                    tracemalloc.stop()
+
+                    clock = pygame.time.Clock()
+                    path_gen = move_ares(game_map, path)
                 elif (AStar_button_rect.collidepoint(event.pos)):
+                    algorithm = "A* Search"
+                    ares_pos, stones, switches = find_pos(game_map)
+                    tracemalloc.start()
+                    start_time = time.time()
                     path, totalCost, node_counter = order_A_star(game_map, ares_pos, stones, weights, switches)
+                    elapsed_time = time.time() - start_time
+                    memory_used = tracemalloc.get_traced_memory()[1] / 1024**2
+                    tracemalloc.stop()
+
+                    clock = pygame.time.Clock()
+                    path_gen = move_ares(game_map, path)
                 elif (Dijsktra_button_rect.collidepoint(event.pos)):
+                    algorithm = "Dijsktra Search"
+                    ares_pos, stones, switches = find_pos(game_map)
+                    tracemalloc.start()
+                    start_time = time.time()
                     path, totalCost, node_counter = launchDijkstra(file_name)
+                    path, totalCost, node_counter = order_A_star(game_map, ares_pos, stones, weights, switches)
+                    elapsed_time = time.time() - start_time
+                    memory_used = tracemalloc.get_traced_memory()[1] / 1024**2
+                    tracemalloc.stop()
 
-        elapsed_time = time.time() - start_time
-        current, peak = tracemalloc.get_traced_memory()
-        tracemalloc.stop()
+                    clock = pygame.time.Clock()
+                    path_gen = move_ares(game_map, path)
 
-        memory_used = peak / 1024**2
+        y = (screen_height / 4) - 200
+        text_surface = font.render(algorithm, True, (255, 255, 255))
+        screen.blit(text_surface, (center_x_start + center_width + 64, y))
 
         info_text = [
             f"Steps: {len(path) if path is not None else 0}",
@@ -253,20 +301,17 @@ def main(file_name):
         
         offset_x, offset_y = draw_map(screen, game_map, images, screen_width, screen_height, square_size)
 
-        if(start == True):  
-            while 1:    
-                path_gen = move_ares(game_map, path)
+        if(start == True):      
                 try:
                     game_map = next(path_gen)
                 except StopIteration:
-                    y = screen_height / 4  # Khoảng cách từ trên xuống
+                    y = screen_height / 4 
                     for line in info_text:
-                        text_surface = font.render(line, True, (255, 255, 255))  # Màu đen
-                        screen.blit(text_surface, (center_x_start + center_width + 92, y))
-                        y += 100  # Tăng vị trí xuống mỗi dòng
+                        text_surface = font.render(line, True, (255, 255, 255))
+                        screen.blit(text_surface, (center_x_start + center_width + 64, y))
+                        y += 100 
+                        
                     pass
-                break  # Kết thúc di chuyển
-
 
         pygame.display.flip()
         clock.tick(5)

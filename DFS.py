@@ -104,9 +104,9 @@ def sokoban_dfs(game_map, weights):
 
         for next_state in get_next_states(state, game_map):
             new_ares_pos, new_stones, new_switches, new_stone_weights, move, step_cost = next_state
-            if is_goal_state(new_stones, new_switches):
+            # if is_goal_state(new_stones, new_switches):
  
-                return path, cost, node_counter + 1
+                # return path, cost, node_counter + 1
             stack.append(((new_ares_pos, new_stones, new_switches, new_stone_weights), path + move, cost + step_cost))
             node_counter += 1
             
