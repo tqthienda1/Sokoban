@@ -49,6 +49,10 @@ def order_bfs(grid, start_node, stones, costs):
             node_counter += 1
     return None, None, None
 
+def launchBFS(file_name):
+    grid, costs = GetMapFromFile(file_name)
+    start_node, stones = find_pos(grid)
+    order_bfs(grid, start_node, stones, costs)
 
                 
 

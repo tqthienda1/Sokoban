@@ -6,23 +6,23 @@ def heuristic(stones, switches):
         total += min(abs(stone[0] - s[0]) + abs(stone[1] - s[1]) for s in switches)
     return total
 
-# def GetMapFromFile(file_name):  
-#     lines = []
-#     with open(file_name, "r") as f:
-#         for line in f:
-#             lines.append(line.rstrip("\n")) 
+def GetMapFromFile(file_name):  
+    lines = []
+    with open(file_name, "r") as f:
+        for line in f:
+            lines.append(line.rstrip("\n")) 
 
-#     costs = list(map(int, lines[0].split()))
-#     map_lines = lines[1:]
+    costs = list(map(int, lines[0].split()))
+    map_lines = lines[1:]
 
-#     max_len = max(len(line) for line in map_lines)
+    max_len = max(len(line) for line in map_lines)
 
-#     map_lines = [list(line) + [' '] * (max_len - len(line)) for line in map_lines]
+    map_lines = [list(line) + [' '] * (max_len - len(line)) for line in map_lines]
     
-#     map_array = np.array(map_lines)
+    map_array = np.array(map_lines)
     
-#     f.close()
-#     return map_array, costs
+    f.close()
+    return map_array, costs
 
 def find_pos(grid): 
     ares_pos = None

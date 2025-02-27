@@ -9,6 +9,7 @@ from helper import *
 from UCS import *
 from DFS import *
 from A_star import *
+from dijkstra import *
 
 
 def main():

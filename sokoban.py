@@ -2,9 +2,14 @@ import pygame
 import numpy as np
 import time
 import tracemalloc
-from DFS import *  # Sử dụng thuật toán DFS
-from UCS import *
+
 from BFS import *
+from gbfs import *
+from helper import *
+from UCS import *
+from DFS import *
+from A_star import *
+from dijkstra import *
 
 # Định nghĩa các ký hiệu trên bản đồ
 WALL = '#'
@@ -104,22 +109,31 @@ def main(file_name):
     background_tile = pygame.image.load("assets/stoneC.png")
     background_width, background_height = background_tile.get_size()
 
-    tracemalloc.start()
-    start_time = time.time()
-    solution, total_cost, node_counter = launchUCS(file_name)  # Gọi thuật toán DFS
-    elapsed_time = time.time() - start_time
-    current, peak = tracemalloc.get_traced_memory()
-    tracemalloc.stop()
-    
-    memory_used = peak / 1024**2
+    path, totalCost, node_counter = None, None, None
+    ares_pos, stones, switches = find_pos(game_map)
 
-    clock = pygame.time.Clock()
-    offset_x, offset_y = 0, 0  # Giá trị mặc định
-
-    path_gen = move_ares(game_map, solution)
     start_button = pygame.image.load("assets/start.png")
-    start_width, start_height = start_button.get_size()
-    start_button_rect = start_button.get_rect()
+    start_button_width, start_button_height = start_button.get_size()
+    start_button = pygame.transform.scale(start_button, (start_button_width * 0.7, start_button_height * 0.7))
+    BFS_button = pygame.image.load("assets/bfs_button.png")
+    BFS_button_width, BFS_button_height = BFS_button.get_size()
+    BFS_button = pygame.transform.scale(BFS_button, (BFS_button_width * 0.7, BFS_button_height * 0.7))
+    GBFS_button = pygame.image.load("assets/gbfs_button.png")
+    GBFS_button_width, GBFS_button_height = GBFS_button.get_size()
+    GBFS_button = pygame.transform.scale(GBFS_button, (GBFS_button_width * 0.7, GBFS_button_height * 0.7))
+    UCS_button = pygame.image.load("assets/ucs_button.png")
+    UCS_button_width, UCS_button_height = UCS_button.get_size()
+    UCS_button = pygame.transform.scale(UCS_button, (UCS_button_width * 0.7, UCS_button_height * 0.7))
+    DFS_button = pygame.image.load("assets/dfs_button.png")
+    DFS_button_width, DFS_button_height = DFS_button.get_size()
+    DFS_button = pygame.transform.scale(DFS_button, (DFS_button_width * 0.7, DFS_button_height * 0.7))
+    AStar_button = pygame.image.load("assets/astar_button.png")
+    AStar_button_width, AStar_button_height = AStar_button.get_size()
+    AStar_button = pygame.transform.scale(AStar_button, (AStar_button_width * 0.7, AStar_button_height * 0.7))
+    Dijsktra_button = pygame.image.load("assets/dijkstra_button.png")
+    Dijsktra_button_width, Dijsktra_button_height = Dijsktra_button.get_size()
+    Dijsktra_button = pygame.transform.scale(Dijsktra_button, (Dijsktra_button_width * 0.7, Dijsktra_button_height * 0.7))
+
     start = False
     running = True
     while running:
@@ -131,6 +145,7 @@ def main(file_name):
 
         center_y_start = (screen_height - game_map.shape[0] * CELL_SIZE) // 2
         center_y_end = center_y_start + game_map.shape[0] * CELL_SIZE
+
 
         # Lót nền trong phạm vi màn hình nhưng không tràn vào vùng bản đồ
         for x in range(0, screen_width, background_width):
@@ -154,62 +169,106 @@ def main(file_name):
             screen.blit(border_tile, (center_x_start + center_width - border_width + 8, y))
             y += border_height
         
-        #tạo viền 2 khung 2 bên
         x = 0
+        y = 0
         while x < center_x_start:
-            screen.blit(border_tile_side, (x - 32, 0))
-            screen.blit(border_tile_side, (x - 32, screen_height - border_height))
-            screen.blit(border_tile_side, (x + center_x_start + center_width + 8, 0))
-            screen.blit(border_tile_side, (x + center_x_start + center_width + 8, screen_height - border_height))
+            y = 0
+            while y < screen_height:
+                screen.blit(border_tile_side, (x - 32, y))
+                screen.blit(border_tile_side, (x + center_x_start + center_width + 8, y))
+                y += border_height
             x += border_width
 
-        y = 0
-        while y < screen_height:
-            screen.blit(border_tile_side, (0, y))
-            screen.blit(border_tile_side, (center_x_start - border_width, y))
-            screen.blit(border_tile_side, (center_x_start + center_width + 8, y))
-            screen.blit(border_tile_side, (2 * center_x_start + center_width - border_width, y))
-            y += border_height
-    
+        y = screen_height / 7
+        screen.blit(BFS_button, (screen_width - square_size - center_x_start - BFS_button_width, y))
+        BFS_button_rect = BFS_button.get_rect()
+        BFS_button_rect.topleft = ((screen_width - square_size - center_x_start - GBFS_button_width, y))
+        y += 100
+        screen.blit(GBFS_button, (screen_width - square_size - center_x_start - GBFS_button_width, y))
+        GBFS_button_rect = GBFS_button.get_rect()
+        GBFS_button_rect.topleft = ((screen_width - square_size - center_x_start - BFS_button_width, y))
+        y += 100
+        screen.blit(UCS_button, (screen_width - square_size - center_x_start - UCS_button_width, y))
+        UCS_button_rect = UCS_button.get_rect()
+        UCS_button_rect.topleft = ((screen_width - square_size - center_x_start - BFS_button_width, y))
+        y += 100
+        screen.blit(DFS_button, (screen_width - square_size - center_x_start - DFS_button_width, y))
+        DFS_button_rect = DFS_button.get_rect()
+        DFS_button_rect.topleft = ((screen_width - square_size - center_x_start - BFS_button_width, y))
+        y += 100
+        screen.blit(AStar_button, (screen_width - square_size - center_x_start - AStar_button_width, y))
+        AStar_button_rect = AStar_button.get_rect()
+        AStar_button_rect.topleft = ((screen_width - square_size - center_x_start - BFS_button_width, y))
+        y += 100
+        screen.blit(Dijsktra_button, (screen_width - square_size - center_x_start - Dijsktra_button_width, y))
+        Dijsktra_button_rect = Dijsktra_button.get_rect()
+        Dijsktra_button_rect.topleft = ((screen_width - square_size - center_x_start - BFS_button_width, y))
+        y += 250
+        screen.blit(start_button, (screen_width - square_size - center_x_start - start_button_width, y))
+        start_button_rect = start_button.get_rect()
+        start_button_rect.topleft = ((screen_width - square_size - center_x_start - BFS_button_width, y))
+
+        tracemalloc.start()
+        start_time = time.time()
+
+        for event in pygame.event.get():
+            if (event.type == pygame.MOUSEBUTTONDOWN):
+                if (start_button_rect.collidepoint(event.pos)):
+                    start = True
+                elif (BFS_button_rect.collidepoint(event.pos)):
+                    path, totalCost, node_counter = order_bfs(game_map, ares_pos, stones, weights)
+                elif (GBFS_button_rect.collidepoint(event.pos)):
+                    path, totalCost, node_counter = launch(file_name)
+                elif (UCS_button_rect.collidepoint(event.pos)):
+                    path, totalCost, node_counter = launchUCS(file_name)
+                elif (DFS_button_rect.collidepoint(event.pos)):
+                    path, totalCost, node_counter = launchDFS(file_name)
+                elif (AStar_button_rect.collidepoint(event.pos)):
+                    path, totalCost, node_counter = order_A_star(game_map, ares_pos, stones, weights, switches)
+                elif (Dijsktra_button_rect.collidepoint(event.pos)):
+                    path, totalCost, node_counter = launchDijkstra(file_name)
+
+        elapsed_time = time.time() - start_time
+        current, peak = tracemalloc.get_traced_memory()
+        tracemalloc.stop()
+
+        memory_used = peak / 1024**2
+
         info_text = [
-            f"Steps: {len(solution)}",
-            f"Weight: {total_cost}",
+            f"Steps: {len(path) if path is not None else 0}",
+            f"Weight: {totalCost}",
             f"Node: {node_counter}",
             f"Time(ms): {round(elapsed_time * 1000, 3)}",
             f"Memory(MB): {memory_used:.2f}"
         ]
 
-        screen.blit(start_button, (84, 104))
-        start_button_rect.topleft = ((84, 104))
-        
-        y_offset = screen_height / 4  # Khoảng cách từ trên xuống
-        for line in info_text:
-            text_surface = font.render(line, True, (255, 255, 255))  # Màu đen
-            screen.blit(text_surface, (center_x_start + center_width + 92, y_offset))
-            y_offset += 100  # Tăng vị trí xuống mỗi dòng
-        
-
+        clock = pygame.time.Clock()
+    
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-                running = False  # Nhấn ESC để thoát toàn màn hình
+                running = False
 
         
         offset_x, offset_y = draw_map(screen, game_map, images, screen_width, screen_height, square_size)
 
-        if (event.type == pygame.MOUSEBUTTONDOWN):
-            if(start_button_rect.collidepoint(event.pos)):
-                start = True
+        if(start == True):  
+            while 1:    
+                path_gen = move_ares(game_map, path)
+                try:
+                    game_map = next(path_gen)
+                except StopIteration:
+                    y = screen_height / 4  # Khoảng cách từ trên xuống
+                    for line in info_text:
+                        text_surface = font.render(line, True, (255, 255, 255))  # Màu đen
+                        screen.blit(text_surface, (center_x_start + center_width + 92, y))
+                        y += 100  # Tăng vị trí xuống mỗi dòng
+                    pass
+                break  # Kết thúc di chuyển
 
-        if(start == True) :      
-            try:
-                game_map = next(path_gen)
-            except StopIteration:
-                pass  # Kết thúc di chuyển
 
         pygame.display.flip()
         clock.tick(5)
-
     pygame.quit()
 
