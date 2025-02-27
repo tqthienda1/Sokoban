@@ -19,7 +19,9 @@ STONE_ON_SWITCH = '*'
 ARES_ON_SWITCH = '+'
 FLOOR = ' '
 
-CELL_SIZE = 64
+pygame.init()
+screen_width, screen_height = pygame.display.get_desktop_sizes()[0]
+CELL_SIZE = screen_height / 30
 
 def load_images():
     return {
@@ -87,7 +89,6 @@ def move_ares(game_map, path):
         yield game_map.copy()
 
 def main(file_name):
-    pygame.init()
     pygame.font.init()
     font = pygame.font.Font("assets\MinecraftRegular-Bmg3.otf", 25)
     screen_width, screen_height = pygame.display.get_desktop_sizes()[0]
@@ -109,24 +110,31 @@ def main(file_name):
     start_button = pygame.image.load("assets/start.png")
     start_button_width, start_button_height = start_button.get_size()
     start_button = pygame.transform.scale(start_button, (start_button_width * 0.7, start_button_height * 0.7))
+    start_button_width, start_button_height = start_button.get_size()
     BFS_button = pygame.image.load("assets/bfs_button.png")
     BFS_button_width, BFS_button_height = BFS_button.get_size()
     BFS_button = pygame.transform.scale(BFS_button, (BFS_button_width * 0.7, BFS_button_height * 0.7))
+    BFS_button_width, BFS_button_height = BFS_button.get_size()
     GBFS_button = pygame.image.load("assets/gbfs_button.png")
     GBFS_button_width, GBFS_button_height = GBFS_button.get_size()
     GBFS_button = pygame.transform.scale(GBFS_button, (GBFS_button_width * 0.7, GBFS_button_height * 0.7))
+    GBFS_button_width, GBFS_button_height = GBFS_button.get_size()
     UCS_button = pygame.image.load("assets/ucs_button.png")
     UCS_button_width, UCS_button_height = UCS_button.get_size()
     UCS_button = pygame.transform.scale(UCS_button, (UCS_button_width * 0.7, UCS_button_height * 0.7))
+    UCS_button_width, UCS_button_height = UCS_button.get_size()
     DFS_button = pygame.image.load("assets/dfs_button.png")
     DFS_button_width, DFS_button_height = DFS_button.get_size()
     DFS_button = pygame.transform.scale(DFS_button, (DFS_button_width * 0.7, DFS_button_height * 0.7))
+    DFS_button_width, DFS_button_height = DFS_button.get_size()
     AStar_button = pygame.image.load("assets/astar_button.png")
     AStar_button_width, AStar_button_height = AStar_button.get_size()
     AStar_button = pygame.transform.scale(AStar_button, (AStar_button_width * 0.7, AStar_button_height * 0.7))
+    AStar_button_width, AStar_button_height = AStar_button.get_size()
     Dijsktra_button = pygame.image.load("assets/dijkstra_button.png")
     Dijsktra_button_width, Dijsktra_button_height = Dijsktra_button.get_size()
     Dijsktra_button = pygame.transform.scale(Dijsktra_button, (Dijsktra_button_width * 0.7, Dijsktra_button_height * 0.7))
+    Dijsktra_button_width, Dijsktra_button_height = Dijsktra_button.get_size()
 
     start = False
     running = True
@@ -147,7 +155,6 @@ def main(file_name):
         center_x_end = screen_width - center_x_start 
         center_width = screen_width - 2 * center_x_start
 
-        # Tạo viền trên
         x = center_x_start
         while x < center_x_end:
             screen.blit(border_tile, (x, 0))
@@ -157,7 +164,7 @@ def main(file_name):
         y = 0
         while y < screen_height:
             screen.blit(border_tile, (center_x_start, y))
-            screen.blit(border_tile, (center_x_start + center_width - border_width + 8, y))
+            screen.blit(border_tile, (center_x_start + center_width - border_width + CELL_SIZE / 8, y))
             y += border_height
         
         x = 0
@@ -165,8 +172,8 @@ def main(file_name):
         while x < center_x_start:
             y = 0
             while y < screen_height:
-                screen.blit(border_tile_side, (x - 32, y))
-                screen.blit(border_tile_side, (x + center_x_start + center_width + 8, y))
+                screen.blit(border_tile_side, (x - CELL_SIZE / 2, y))
+                screen.blit(border_tile_side, (x + center_x_start + center_width + CELL_SIZE / 8, y))
                 y += border_height
             x += border_width
 
@@ -280,7 +287,7 @@ def main(file_name):
 
         y = (screen_height / 4) - 200
         text_surface = font.render(algorithm, True, (255, 255, 255))
-        screen.blit(text_surface, (center_x_start + center_width + 64, y))
+        screen.blit(text_surface, (center_x_start + center_width + CELL_SIZE, y))
 
         info_text = [
             f"Steps: {len(path) if path is not None else 0}",
