@@ -3,6 +3,7 @@ import numpy as np
 import time
 import tracemalloc
 import copy
+import subprocess
 
 from BFS import *
 from gbfs import *
@@ -167,10 +168,6 @@ def main(file_name):
             for y in range(0, screen_height, background_height):
                 screen.blit(background_tile, (x, y))
 
-        center_x_start = (screen_width - square_size) / 2
-        center_x_end = screen_width - center_x_start 
-        center_width = screen_width - 2 * center_x_start
-
         x = center_x_start
         while x < center_x_end:
             screen.blit(border_tile, (x, 0))
@@ -211,14 +208,17 @@ def main(file_name):
         screen.blit(start_button, ((center_x_start - start_button_width) / 2, y))
         start_button_rect = start_button.get_rect()
         start_button_rect.topleft = ((screen_width - square_size - center_x_start - start_button_width, y))
-        screen.blit(exit_button, ((screen_width - exit_button_width) / 2, y))
+        screen.blit(exit_button, (screen_width - center_x_start + (exit_button_width / 3), y))
         exit_button_rect = exit_button.get_rect()
-        exit_button_rect.topleft = ((screen_width - exit_button_width) / 2, y)
+        exit_button_rect.topleft = (screen_width - center_x_start + (exit_button_width / 3), y)
 
         if(button_enable == True):
             for event in pygame.event.get():
                 if (event.type == pygame.MOUSEBUTTONDOWN):
-                    if (start_button_rect.collidepoint(event.pos)):
+                    if (exit_button_rect.collidepoint(event.pos)):
+                        from ui import screen1
+                        screen1()
+                    elif (start_button_rect.collidepoint(event.pos)):
                         start = True
                         button_enable = False
                         if(algorithm == "Breadth-First Search"):
