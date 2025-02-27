@@ -13,7 +13,7 @@ from dijkstra import *
 
 
 def main():
-    file_name = "./Inputs/input-03.txt"
+    file_name = "./Inputs/input-08.txt"
     grid, costs = GetMapFromFile(file_name)
     print(grid)
     print(costs)
