@@ -4,6 +4,7 @@ from PIL import Image
 def screen1():
     import sokoban
     pygame.init()
+    clock = pygame.time.Clock()
 
     info = pygame.display.Info()
     WIDTH, HEIGHT = info.current_w, info.current_h
@@ -204,6 +205,6 @@ def screen1():
         
 
         pygame.display.update()
-    
+        clock.tick(60)
 screen1()
     
