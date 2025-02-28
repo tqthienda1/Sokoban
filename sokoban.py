@@ -2,8 +2,6 @@ import pygame
 import numpy as np
 import time
 import tracemalloc
-import copy
-import subprocess
 
 from BFS import *
 from gbfs import *

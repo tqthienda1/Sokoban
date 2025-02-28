@@ -1,5 +1,4 @@
 import pygame
-from PIL import Image
 
 def screen1():
     import sokoban

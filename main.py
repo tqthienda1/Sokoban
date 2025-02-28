@@ -1,6 +1,5 @@
 import time
 import tracemalloc
-import os
 import textwrap
 
 from BFS import *
@@ -13,13 +12,42 @@ from dijkstra import *
 
 
 def main():
-    file_name = "./Inputs/input-08.txt"
+    choose_map = int(input("Choose map from 1-10: "))
+    num = "10"
+    
+    if choose_map == 1:
+        num = "01"
+    elif choose_map == 2:
+        num = "02"
+        
+    elif choose_map == 3:
+        num = "03"
+    
+    elif choose_map == 4:
+        num = "04"
+        
+    elif choose_map == 5:
+        num = "05"
+    
+    elif choose_map == 6:
+        num = "06"
+        
+    elif choose_map == 7:
+        num = "07"
+        
+    elif choose_map == 8:
+        num = "08"
+    
+    elif choose_map == 9:
+        num = "09"
+    
+    else:
+        pass
+    file_name = f"./Inputs/input-{num}.txt"
     grid, costs = GetMapFromFile(file_name)
+    print(f"Map was chosen: input-{num}.txt")
     print(grid)
-    print(costs)
     ares_pos, stones, switches = find_pos(grid)
-    print(stones)
-    print(switches)
 
     if ares_pos and stones:
         
