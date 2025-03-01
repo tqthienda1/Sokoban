@@ -243,7 +243,9 @@ def main(file_name):
                     start = True    
                 if(button_enable == True):
                     if (start_button_rect.collidepoint(event.pos)):
-                        if(game_map == initial_state).all():
+                        if (algorithm == ""):
+                            start = False
+                        elif(game_map == initial_state).all():
                             start = True
                             button_enable = False
                             text = font.render("Loading...", True, (255, 255, 255))
