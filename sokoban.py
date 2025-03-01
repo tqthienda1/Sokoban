@@ -184,35 +184,35 @@ def main(file_name):
             screen.blit(border_tile, (center_x_end, y))
             y += border_height
 
-        y = screen_height / 7
+        y = screen_height / 10
         screen.blit(BFS_button, ((center_x_start - BFS_button_width) / 2, y))
         BFS_button_rect = BFS_button.get_rect()
         BFS_button_rect.topleft = (((center_x_start - BFS_button_width) / 2, y))
-        y += 100
+        y += screen_height / 10
         screen.blit(GBFS_button, ((center_x_start - GBFS_button_width) / 2, y))
         GBFS_button_rect = GBFS_button.get_rect()
         GBFS_button_rect.topleft = (((center_x_start - GBFS_button_width) / 2, y))
-        y += 100
+        y += screen_height / 10
         screen.blit(UCS_button, ((center_x_start - UCS_button_width) / 2, y))
         UCS_button_rect = UCS_button.get_rect()
         UCS_button_rect.topleft = (((center_x_start - UCS_button_width) / 2, y))
-        y += 100
+        y += screen_height / 10
         screen.blit(DFS_button, ((center_x_start - DFS_button_width) / 2, y))
         DFS_button_rect = DFS_button.get_rect()
         DFS_button_rect.topleft = (((center_x_start - DFS_button_width) / 2, y))
-        y += 100
+        y += screen_height / 10
         screen.blit(AStar_button, ((center_x_start - AStar_button_width) / 2, y))
         AStar_button_rect = AStar_button.get_rect()
         AStar_button_rect.topleft = (((center_x_start - AStar_button_width) / 2, y))
-        y += 100
+        y += screen_height / 10
         screen.blit(Dijsktra_button, ((center_x_start - Dijsktra_button_width) / 2, y))
         Dijsktra_button_rect = Dijsktra_button.get_rect()
         Dijsktra_button_rect.topleft = (((center_x_start - Dijsktra_button_width) / 2, y))
-        y += 200
+        y += 2* (screen_height / 10)
         screen.blit(start_button, ((center_x_start - start_button_width) / 2, y))
         start_button_rect = start_button.get_rect()
         start_button_rect.topleft = ((screen_width - square_size - center_x_start - start_button_width, y))
-        y += 100
+        y += screen_height / 10
         screen.blit(pause_button, ((center_x_start - pause_button_width) / 2, y))
         pause_button_rect = pause_button.get_rect()
         pause_button_rect.topleft = ((screen_width - square_size - center_x_start - pause_button_width, y))
@@ -345,10 +345,9 @@ def main(file_name):
                 if (pause_button_rect.collidepoint(event.pos)):
                     start = False
 
-
-        y = (screen_height / 4) - 200
         text_surface = font.render(algorithm, True, (255, 255, 255))
-        screen.blit(text_surface, ((center_x_start - start_button_width) / 2, y))
+        text_surface_width, text_surface_height = text_surface.get_size()
+        screen.blit(text_surface, ((center_x_start - text_surface_width) / 2, screen_height / 20))
 
 
         info_text = [
