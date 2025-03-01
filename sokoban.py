@@ -86,7 +86,7 @@ def move_ares(game_map, path):
             game_map[nx, ny] = ARES_ON_SWITCH if game_map[nx, ny] == SWITCH else ARES
             game_map[px, py] = SWITCH if game_map[px, py] == ARES_ON_SWITCH else ' '
 
-        time.sleep(0.1)
+        time.sleep(0.3)
         yield game_map.copy()
 
 def main(file_name):
@@ -119,6 +119,10 @@ def main(file_name):
     start_button_width, start_button_height = start_button.get_size()
     start_button = pygame.transform.scale(start_button, (start_button_width * 0.65, start_button_height * 0.65))
     start_button_width, start_button_height = start_button.get_size()
+    pause_button = pygame.image.load("assets/pause.png")
+    pause_button_width, pause_button_height = pause_button.get_size()
+    pause_button = pygame.transform.scale(pause_button, (pause_button_width * 0.65, pause_button_height * 0.65))
+    pause_button_width, pause_button_height = pause_button.get_size()
     BFS_button = pygame.image.load("assets/bfs_button.png")
     BFS_button_width, BFS_button_height = BFS_button.get_size()
     BFS_button = pygame.transform.scale(BFS_button, (BFS_button_width * 0.65, BFS_button_height * 0.65))
@@ -204,31 +208,49 @@ def main(file_name):
         screen.blit(Dijsktra_button, ((center_x_start - Dijsktra_button_width) / 2, y))
         Dijsktra_button_rect = Dijsktra_button.get_rect()
         Dijsktra_button_rect.topleft = (((center_x_start - Dijsktra_button_width) / 2, y))
-        y += 250
+        y += 200
         screen.blit(start_button, ((center_x_start - start_button_width) / 2, y))
         start_button_rect = start_button.get_rect()
         start_button_rect.topleft = ((screen_width - square_size - center_x_start - start_button_width, y))
+        y += 100
+        screen.blit(pause_button, ((center_x_start - pause_button_width) / 2, y))
+        pause_button_rect = pause_button.get_rect()
+        pause_button_rect.topleft = ((screen_width - square_size - center_x_start - pause_button_width, y))
+
         screen.blit(exit_button, (((center_x_start - Dijsktra_button_width) / 2) + (center_x_end + CELL_SIZE) , y))
         exit_button_rect = exit_button.get_rect()
         exit_button_rect.topleft = ((center_x_start - Dijsktra_button_width) / 2) + (center_x_end + CELL_SIZE), y
         
         test = False
 
+        if(start == True):      
+                try:
+                    game_map = next(path_gen)
+                except StopIteration:
+                    y = screen_height / 4 
+                    for line in info_text:
+                        text_surface = font.render(line, True, (255, 255, 255))
+                        screen.blit(text_surface, (screen_width - center_x_start + 2*CELL_SIZE, y))
+                        y += 100 
+                    button_enable = True
+
         for event in pygame.event.get():
             if (event.type == pygame.MOUSEBUTTONDOWN):
                 if (exit_button_rect.collidepoint(event.pos)):
                     from ui import screen1
                     screen1()
+                if(button_enable == False and start_button_rect.collidepoint(event.pos)):
+                    start = True    
                 if(button_enable == True):
-                    
                     if (start_button_rect.collidepoint(event.pos)):
-                        start = True
-                        button_enable = False
-                        text = font.render("Loading...", True, (255, 255, 255))
-                        text_width, text_height = text.get_size()
-                        screen.blit(text, ((screen_width - text_width) / 2, (screen_height - text_height) / 2))
-                        pygame.display.update()
-                        time.sleep(1)
+                        if(game_map == initial_state).all():
+                            start = True
+                            button_enable = False
+                            text = font.render("Loading...", True, (255, 255, 255))
+                            text_width, text_height = text.get_size()
+                            screen.blit(text, ((screen_width - text_width) / 2, (screen_height - text_height) / 2))
+                            pygame.display.update()
+                            time.sleep(1)
                         if(algorithm == "Breadth-First Search"):
                             ares_pos, stones, switches = find_pos(game_map)
                             tracemalloc.start()
@@ -320,6 +342,9 @@ def main(file_name):
                         algorithm = "Dijsktra Search"
                         start = False
                         game_map = initial_state.copy()
+                if (pause_button_rect.collidepoint(event.pos)):
+                    start = False
+
 
         y = (screen_height / 4) - 200
         text_surface = font.render(algorithm, True, (255, 255, 255))
@@ -344,17 +369,6 @@ def main(file_name):
 
         
         offset_x, offset_y = draw_map(screen, game_map, images, screen_width, screen_height, square_size)
-
-        if(start == True):      
-                try:
-                    game_map = next(path_gen)
-                except StopIteration:
-                    y = screen_height / 4 
-                    for line in info_text:
-                        text_surface = font.render(line, True, (255, 255, 255))
-                        screen.blit(text_surface, (screen_width - center_x_start + 2*CELL_SIZE, y))
-                        y += 100 
-                    button_enable = True
 
         pygame.display.flip()
         clock.tick(60)
